@@ -10,7 +10,7 @@ export class UsersService {
   findAll() {
     return this.usersRepository.findAll();
   }
-  create(content: string) {
+  create(content: { login: string; password: string }) {
     return this.usersRepository.create(content);
   }
   update(id: string) {
