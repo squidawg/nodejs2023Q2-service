@@ -1,7 +1,8 @@
-import { readFile, writeFile } from 'fs/promises';
-import * as crypto from 'crypto';
-import { Injectable } from '@nestjs/common';
-import { User } from "../model/users.model";
+import { readFile, writeFile } from "fs/promises";
+import * as crypto from "crypto";
+import { Injectable } from "@nestjs/common";
+import { CreatedUser, User } from "../model/users.model";
+import { UpdatePasswordModel } from "../model/UpdatePasswordModel";
 
 @Injectable()
 export class UsersRepository {
@@ -15,7 +16,7 @@ export class UsersRepository {
     const user = JSON.parse(content);
     return user;
   }
-  async create(user: { login: string; password: string }) {
+  async create(user: CreatedUser) {
     const content = await readFile('db.json', 'utf-8');
     const users = JSON.parse(content);
     const id = crypto.randomBytes(20).toString('hex');
@@ -30,9 +31,17 @@ export class UsersRepository {
     };
     await writeFile('db.json', JSON.stringify(users));
   }
-  update(id: string) {
-    //const content = await readFile('db.json', 'utf-8');
-    console.log('updatesd_user');
+  async update(id: string, content: UpdatePasswordModel) {
+    const contents = await readFile('db.json', 'utf-8');
+    const users = JSON.parse(contents);
+    const timestampOfUpdate = Date.now();
+    if (users[id].password !== content.oldPassword) {
+      return;
+    }
+    users[id].password = content.newPassword;
+    users[id].updatedAt = timestampOfUpdate;
+    users[id].version += 1;
+    await writeFile('db.json', JSON.stringify(users));
   }
   async delete(id: string) {
     const content = await readFile('db.json', 'utf-8');
