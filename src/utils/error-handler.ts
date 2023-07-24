@@ -1,4 +1,4 @@
-import { ERROR_MSG, HTTP_CODE } from '../model/users.model';
+import { ERROR_MSG, HTTP_CODE } from '../users/model/users.model';
 import {
   BadRequestException,
   NotFoundException,

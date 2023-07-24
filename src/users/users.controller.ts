@@ -9,9 +9,9 @@ import {
   Res,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from '../dto/createUser.dto';
-import { UpdatePasswordDto } from '../dto/UpdatePasswordDto';
-import { ERROR_MSG, HTTP_CODE } from '../model/users.model';
+import { CreateUserDto } from './dto/createUser.dto';
+import { UpdatePasswordDto } from './dto/UpdatePasswordDto';
+import { ERROR_MSG, HTTP_CODE } from './model/users.model';
 import { errorHandler } from '../utils/error-handler';
 
 @Controller('user')
