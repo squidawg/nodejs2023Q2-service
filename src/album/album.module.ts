@@ -4,7 +4,7 @@ import { AlbumController } from './album.controller';
 import { AlbumRepository } from './album.repository';
 
 @Module({
-  providers: [AlbumService, AlbumRepository],
   controllers: [AlbumController],
+  providers: [AlbumService, AlbumRepository],
 })
 export class AlbumModule {}

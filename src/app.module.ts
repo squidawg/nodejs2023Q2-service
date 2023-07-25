@@ -17,15 +17,25 @@ import { AlbumModule } from './album/album.module';
 import { AlbumController } from './album/album.controller';
 import { AlbumService } from './album/album.service';
 import { AlbumRepository } from './album/album.repository';
+import { FavoritesController } from './favorites/favorites.controller';
+import { FavoritesModule } from './favorites/favorites.module';
+import { FavoritesService } from './favorites/favorites.service';
 
 @Module({
-  imports: [UsersModule, TrackModule, ArtistModule, AlbumModule],
+  imports: [
+    UsersModule,
+    TrackModule,
+    ArtistModule,
+    AlbumModule,
+    FavoritesModule,
+  ],
   controllers: [
     AppController,
     UsersController,
     TrackController,
     ArtistController,
     AlbumController,
+    FavoritesController,
   ],
   providers: [
     AppService,
@@ -33,6 +43,7 @@ import { AlbumRepository } from './album/album.repository';
     TrackService,
     ArtistService,
     AlbumService,
+    FavoritesService,
     UsersRepository,
     TrackRepository,
     ArtistRepository,
