@@ -1,9 +1,9 @@
-import { ERROR_MSG, HTTP_CODE } from '../users/model/users.model';
 import {
   BadRequestException,
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
+import { ERROR_MSG, HTTP_CODE } from './util.model';
 
 export const errorHandler = (user: HTTP_CODE, message: ERROR_MSG) => {
   switch (user) {

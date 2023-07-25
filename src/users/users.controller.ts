@@ -11,8 +11,8 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePasswordDto';
-import { ERROR_MSG, HTTP_CODE } from './model/users.model';
-import { errorHandler, responseHandler } from '../utils/error-handler';
+import { errorHandler, responseHandler } from '../utils/helpers';
+import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
 
 @Controller('user')
 export class UsersController {

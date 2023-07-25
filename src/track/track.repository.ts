@@ -2,7 +2,7 @@ import { readFile, writeFile } from 'fs/promises';
 import { Injectable } from '@nestjs/common';
 import { validate, v4 } from 'uuid';
 import { Track } from './model/track.model';
-import { HTTP_CODE } from '../users/model/users.model';
+import { HTTP_CODE } from '../utils/util.model';
 @Injectable()
 export class TrackRepository {
   async findAll() {

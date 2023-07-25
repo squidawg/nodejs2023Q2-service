@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/CreateTrackDto';
-import { errorHandler, responseHandler } from '../utils/error-handler';
-import { ERROR_MSG, HTTP_CODE } from '../users/model/users.model';
+import { errorHandler, responseHandler } from '../utils/helpers';
+import { ERROR_MSG, HTTP_CODE } from "../utils/util.model";
 
 @Controller('track')
 export class TrackController {

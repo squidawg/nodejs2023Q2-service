@@ -1,8 +1,9 @@
 import { readFile, writeFile } from 'fs/promises';
 import { Injectable } from '@nestjs/common';
-import { CreatedUser, HTTP_CODE } from './model/users.model';
+import { CreatedUser} from './model/users.model';
 import { UpdatePasswordModel } from './model/UpdatePasswordModel';
 import { validate, v4 } from 'uuid';
+import { HTTP_CODE } from "../utils/util.model";
 @Injectable()
 export class UsersRepository {
   async findOne(id: string) {
