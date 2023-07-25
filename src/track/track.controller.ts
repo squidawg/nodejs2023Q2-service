@@ -11,7 +11,7 @@ import {
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/CreateTrackDto';
 import { errorHandler, responseHandler } from '../utils/helpers';
-import { ERROR_MSG, HTTP_CODE } from "../utils/util.model";
+import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
 
 @Controller('track')
 export class TrackController {
