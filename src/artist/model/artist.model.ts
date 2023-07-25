@@ -3,3 +3,5 @@ export interface Artist {
   name: string;
   grammy: boolean;
 }
+
+export type CreatedArtist = Required<Pick<Artist, 'name' | 'grammy'>>;
