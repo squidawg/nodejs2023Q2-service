@@ -1,8 +1,8 @@
 import { ERROR_MSG, HTTP_CODE } from '../users/model/users.model';
 import {
   BadRequestException,
-  NotFoundException,
   ForbiddenException,
+  NotFoundException,
 } from '@nestjs/common';
 
 export const errorHandler = (user: HTTP_CODE, message: ERROR_MSG) => {
@@ -15,3 +15,14 @@ export const errorHandler = (user: HTTP_CODE, message: ERROR_MSG) => {
       return new ForbiddenException(`data  is wrong`);
   }
 };
+
+export function responseHandler(
+  err: BadRequestException | NotFoundException | ForbiddenException,
+  response,
+  status: HTTP_CODE,
+  content: HTTP_CODE | '' = '',
+) {
+  return err
+    ? response.status(err.getStatus()).send(err.getResponse())
+    : response.status(status).send(content);
+}

@@ -6,9 +6,12 @@ import {
   Param,
   Post,
   Put,
+  Res,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
-import { CreateTrackDto } from "./dto/CreateTrackDto";
+import { CreateTrackDto } from './dto/CreateTrackDto';
+import { errorHandler, responseHandler } from '../utils/error-handler';
+import { ERROR_MSG, HTTP_CODE } from '../users/model/users.model';
 
 @Controller('track')
 export class TrackController {
@@ -18,19 +21,29 @@ export class TrackController {
     return this.trackService.findAll();
   }
   @Get('/:id')
-  getTrack(@Param('id') id: string) {
-    return this.trackService.findOne(id);
+  async getTrack(@Param('id') id: string, @Res() response) {
+    const track = await this.trackService.findOne(id);
+    const err = errorHandler(track, ERROR_MSG.TRACK_ID);
+    return responseHandler(err, response, HTTP_CODE.OK, track);
   }
   @Post()
   create(@Body() content: CreateTrackDto) {
     return this.trackService.create(content);
   }
   @Put('/:id')
-  update(@Param('id') id: string, @Body() content: CreateTrackDto) {
-    return this.trackService.update(id, content);
+  async update(
+    @Param('id') id: string,
+    @Body() content: CreateTrackDto,
+    @Res() response,
+  ) {
+    const track = await this.trackService.update(id, content);
+    const err = errorHandler(track, ERROR_MSG.TRACK_ID);
+    return responseHandler(err, response, HTTP_CODE.OK, track);
   }
   @Delete('/:id')
-  delete(@Param('id') id: string) {
-    return this.trackService.delete(id);
+  async delete(@Param('id') id: string, @Res() response) {
+    const track = await this.trackService.delete(id);
+    const err = errorHandler(track, ERROR_MSG.TRACK_ID);
+    return responseHandler(err, response, HTTP_CODE.DELETED);
   }
 }

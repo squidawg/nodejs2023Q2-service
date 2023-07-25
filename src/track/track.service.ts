@@ -18,6 +18,6 @@ export class TrackService {
     return this.trackRepository.update(id, content);
   }
   delete(id: string) {
-    return 'deleted track';
+    return this.trackRepository.delete(id);
   }
 }

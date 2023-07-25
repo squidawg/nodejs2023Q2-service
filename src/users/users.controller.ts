@@ -12,7 +12,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePasswordDto';
 import { ERROR_MSG, HTTP_CODE } from './model/users.model';
-import { errorHandler } from '../utils/error-handler';
+import { errorHandler, responseHandler } from '../utils/error-handler';
 
 @Controller('user')
 export class UsersController {
@@ -25,9 +25,7 @@ export class UsersController {
   async getUser(@Param('id') id: string, @Res() response) {
     const user = await this.usersService.findOne(id);
     const err = errorHandler(user, ERROR_MSG.USER_ID);
-    return err
-      ? response.status(err.getStatus()).send(err.getResponse())
-      : response.status(HTTP_CODE.OK).send(user);
+    return responseHandler(err, response, HTTP_CODE.OK, user);
   }
   @Post()
   createUser(@Body() content: CreateUserDto) {
@@ -41,16 +39,12 @@ export class UsersController {
   ) {
     const user = await this.usersService.update(id, content);
     const err = errorHandler(user, ERROR_MSG.USER_ID);
-    return err
-      ? response.status(err.getStatus()).send(err.getResponse())
-      : response.status(HTTP_CODE.OK).send(user);
+    return responseHandler(err, response, HTTP_CODE.OK, user);
   }
   @Delete('/:id')
   async deleteUser(@Param('id') id: string, @Res() response) {
     const user = await this.usersService.delete(id);
     const err = errorHandler(user, ERROR_MSG.USER_ID);
-    return err
-      ? response.status(err.getStatus()).send(err.getResponse())
-      : response.status(HTTP_CODE.DELETED).send();
+    return responseHandler(err, response, HTTP_CODE.DELETED);
   }
 }
