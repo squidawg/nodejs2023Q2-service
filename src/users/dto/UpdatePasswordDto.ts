@@ -1,6 +1,5 @@
 import { IsString, IsNotEmpty } from 'class-validator';
-import { UpdatePasswordModel } from '../model/UpdatePasswordModel';
-
+import { UpdatePasswordModel } from 'src/users/model/UpdatePasswordModel';
 export class UpdatePasswordDto implements UpdatePasswordModel {
   @IsString()
   @IsNotEmpty()

@@ -8,10 +8,17 @@ import { UsersRepository } from './users/users.repository';
 import { TrackController } from './track/track.controller';
 import { TrackModule } from './track/track.module';
 import { TrackRepository } from './track/track.repository';
+import { TrackService } from './track/track.service';
 
 @Module({
   imports: [UsersModule, TrackModule],
   controllers: [AppController, UsersController, TrackController],
-  providers: [AppService, UsersService, UsersRepository, TrackRepository],
+  providers: [
+    AppService,
+    UsersService,
+    TrackService,
+    UsersRepository,
+    TrackRepository,
+  ],
 })
 export class AppModule {}
