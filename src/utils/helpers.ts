@@ -2,14 +2,17 @@ import {
   BadRequestException,
   ForbiddenException,
   NotFoundException,
-} from '@nestjs/common';
-import { ERROR_MSG, HTTP_CODE } from './util.model';
-import { UserResponse } from '../users/model/users.model';
-import { Album } from '../album/model/album.model';
-import { Track } from '../track/model/track.model';
-import { DataStorage } from '../../fakeDb/db';
-import { Artist } from '../artist/model/artist.model';
+  UnprocessableEntityException
+} from "@nestjs/common";
+import { ERROR_MSG, HTTP_CODE } from "./util.model";
+import { UserResponse } from "../users/model/users.model";
+import { Album } from "../album/model/album.model";
+import { Track } from "../track/model/track.model";
+import { DataStorage, Favs } from "../../fakeDb/db";
+import { Artist } from "../artist/model/artist.model";
+
 export const database = new DataStorage();
+export const favorites = new Favs();
 export const errorHandler = (
   user: Artist | Track | Album | UserResponse | HTTP_CODE,
   message: ERROR_MSG,
@@ -21,6 +24,8 @@ export const errorHandler = (
       return new NotFoundException(`${message} doesn't exist`);
     case HTTP_CODE.FORBIDDEN:
       return new ForbiddenException(`data  is wrong`);
+    case HTTP_CODE.UNPROC_CONTENT:
+      return new UnprocessableEntityException('UnprocessableEntityException');
   }
 };
 
