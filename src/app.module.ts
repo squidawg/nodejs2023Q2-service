@@ -20,6 +20,7 @@ import { AlbumRepository } from './album/album.repository';
 import { FavoritesController } from './favorites/favorites.controller';
 import { FavoritesModule } from './favorites/favorites.module';
 import { FavoritesService } from './favorites/favorites.service';
+import { FavoritesRepository } from "./favorites/favorites.repository";
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { FavoritesService } from './favorites/favorites.service';
     TrackRepository,
     ArtistRepository,
     AlbumRepository,
+    FavoritesRepository,
   ],
 })
 export class AppModule {}
