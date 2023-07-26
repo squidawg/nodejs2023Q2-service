@@ -1,11 +1,9 @@
-import { readFile, writeFile } from 'fs/promises';
 import { Injectable } from '@nestjs/common';
 import { validate, v4 } from 'uuid';
 import { Artist, CreatedArtist } from './model/artist.model';
 import { HTTP_CODE } from '../utils/util.model';
 import { database } from '../utils/helpers';
 
-const pathToDb = 'fakeDb/artistDb.json';
 @Injectable()
 export class ArtistRepository {
   async findAll() {
