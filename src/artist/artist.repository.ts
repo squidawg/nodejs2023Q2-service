@@ -1,59 +1,65 @@
 import { readFile, writeFile } from 'fs/promises';
 import { Injectable } from '@nestjs/common';
 import { validate, v4 } from 'uuid';
-import { CreatedArtist } from './model/artist.model';
+import { Artist, CreatedArtist } from './model/artist.model';
 import { HTTP_CODE } from '../utils/util.model';
+import { database } from '../utils/helpers';
+
 const pathToDb = 'fakeDb/artistDb.json';
 @Injectable()
 export class ArtistRepository {
   async findAll() {
-    const content = await readFile(pathToDb, 'utf-8');
-    const artists = JSON.parse(content);
-    return artists;
+    return database.getArtists;
   }
   async finOne(id: string) {
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
     }
-    const content = await readFile(pathToDb, 'utf-8');
-    const artists = JSON.parse(content);
-    if (!artists[id]) {
+    const artist = database.getArtistById(id);
+    if (!artist) {
       return HTTP_CODE.NOT_FOUND;
     }
-    return artists[id];
+    return artist;
   }
   async create(artist: CreatedArtist) {
-    const content = await readFile(pathToDb, 'utf-8');
-    const artists = JSON.parse(content);
     const id = v4();
-    artists[id] = {
+    const newArtist = {
       id,
       ...artist,
     };
-    await writeFile(pathToDb, JSON.stringify(artists));
+    database.setArtist(newArtist);
+    return newArtist;
   }
   async update(id: string, content: CreatedArtist) {
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
     }
-    const contents = await readFile(pathToDb, 'utf-8');
-    const artists = JSON.parse(contents);
-    if (!artists[id]) {
+    const artist = database.getArtistById(id);
+    if (!artist) {
       return HTTP_CODE.NOT_FOUND;
     }
-    artists[id] = { id, ...content };
-    await writeFile(pathToDb, JSON.stringify(artists));
+    const updatedArtist = { id, ...content };
+    const updatedArtists = database.getArtists.map((artist: Artist) =>
+      artist.id === id ? updatedArtist : artist,
+    );
+    database.setArtists(updatedArtists);
+    return updatedArtist;
   }
   async delete(id: string) {
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
     }
-    const contents = await readFile(pathToDb, 'utf-8');
-    const artists = JSON.parse(contents);
-    if (!artists[id]) {
+    const artist = database.getArtistById(id);
+    if (!artist) {
       return HTTP_CODE.NOT_FOUND;
     }
-    delete artists[id];
-    await writeFile(pathToDb, JSON.stringify(artists));
+    database.removeArtist(id);
+    //set null to albums and tracks props
+    database.getAlbums.map((obj) =>
+      obj.artistId === id ? (obj.artistId = null) : obj,
+    );
+    database.getTracks.map((obj) =>
+      obj.artistId === id ? (obj.artistId = null) : obj,
+    );
   }
 }

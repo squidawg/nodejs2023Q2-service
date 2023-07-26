@@ -1,60 +1,60 @@
 import { Injectable } from '@nestjs/common';
-import { readFile, writeFile } from 'fs/promises';
 import { v4, validate } from 'uuid';
 import { HTTP_CODE } from '../utils/util.model';
 import { Album } from './model/album.model';
-const pathToDb = 'fakeDb/album.db.json';
+import { database } from '../utils/helpers';
 
 @Injectable()
 export class AlbumRepository {
   async findAll() {
-    const content = await readFile(pathToDb, 'utf-8');
-    const albums = JSON.parse(content);
-    return albums;
+    return database.getAlbums;
   }
   async finOne(id: string) {
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
     }
-    const content = await readFile(pathToDb, 'utf-8');
-    const albums = JSON.parse(content);
-    if (!albums[id]) {
+    const album = database.getAlbumById(id);
+    if (!album) {
       return HTTP_CODE.NOT_FOUND;
     }
-    return albums[id];
+    return album;
   }
   async create(artist: Album) {
-    const content = await readFile(pathToDb, 'utf-8');
-    const albums = JSON.parse(content);
     const id = v4();
-    albums[id] = {
+    const newAlbum = {
       id,
       ...artist,
     };
-    await writeFile(pathToDb, JSON.stringify(albums));
+    database.setAlbum(newAlbum);
+    return newAlbum;
   }
   async update(id: string, content: Album) {
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
     }
-    const contents = await readFile(pathToDb, 'utf-8');
-    const albums = JSON.parse(contents);
-    if (!albums[id]) {
+    const album = database.getAlbumById(id);
+    if (!album) {
       return HTTP_CODE.NOT_FOUND;
     }
-    albums[id] = { id, ...content };
-    await writeFile(pathToDb, JSON.stringify(albums));
+    const updatedAlbum = { id, ...content };
+    const updatedAlbums = database.getAlbums.map((album: Album) =>
+      album.id === updatedAlbum.id ? updatedAlbum : album,
+    );
+    database.setAlbums(updatedAlbums);
+    return updatedAlbum;
   }
   async delete(id: string) {
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
     }
-    const contents = await readFile(pathToDb, 'utf-8');
-    const albums = JSON.parse(contents);
-    if (!albums[id]) {
+    const album = database.getAlbumById(id);
+    if (!album) {
       return HTTP_CODE.NOT_FOUND;
     }
-    delete albums[id];
-    await writeFile(pathToDb, JSON.stringify(albums));
+    database.removeAlbum(id);
+    //set null to album prop
+    database.getTracks.map((obj) =>
+      obj.albumId === id ? (obj.albumId = null) : obj,
+    );
   }
 }

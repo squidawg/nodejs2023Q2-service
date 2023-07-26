@@ -8,3 +8,6 @@ export interface User {
 }
 
 export type CreatedUser = Required<Pick<User, 'login' | 'password'>>;
+export type UserResponse = Required<
+  Pick<User, 'id' | 'login' | 'version' | 'createdAt' | 'updatedAt'>
+>;

@@ -6,6 +6,7 @@ export enum ERROR_MSG {
 
 export enum HTTP_CODE {
   OK = 200,
+  CREATED = 201,
   DELETED = 204,
   BAD_REQUEST = 400,
   FORBIDDEN = 403,

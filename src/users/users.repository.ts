@@ -1,71 +1,61 @@
-import { readFile, writeFile } from 'fs/promises';
 import { Injectable } from '@nestjs/common';
-import { CreatedUser } from './model/users.model';
+import { CreatedUser, UserResponse } from './model/users.model';
 import { UpdatePasswordModel } from './model/UpdatePasswordModel';
-import { validate, v4 } from 'uuid';
+import { validate } from 'uuid';
 import { HTTP_CODE } from '../utils/util.model';
-const pathToDb = 'fakeDb/db.json';
+import { UserData } from '../../fakeDb/db';
+import { database } from '../utils/helpers';
 @Injectable()
 export class UsersRepository {
   async findOne(id: string) {
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
     }
-    const content = await readFile(pathToDb, 'utf-8');
-    const user = JSON.parse(content);
-    if (!user[id]) {
+    const user = database.getUserById(id);
+    if (!user) {
       return HTTP_CODE.NOT_FOUND;
     }
-    return user[id];
-  }
-  async findAll() {
-    const content = await readFile(pathToDb, 'utf-8');
-    const user = JSON.parse(content);
     return user;
   }
-  async create(user: CreatedUser) {
-    const content = await readFile(pathToDb, 'utf-8');
-    const users = JSON.parse(content);
-    const id = v4();
-    const timestampOfCreation = Date.now();
-    users[id] = {
-      id,
-      login: user.login,
-      password: user.password,
-      version: 0,
-      createdAt: timestampOfCreation,
-      updatedAt: timestampOfCreation,
-    };
-    await writeFile(pathToDb, JSON.stringify(users));
+  async findAll() {
+    return database.getUsers;
+  }
+  create(user: CreatedUser) {
+    const newUser = new UserData(user.login, user.password);
+    database.setUser(newUser);
+    const { password, ...response } = newUser;
+    return response as UserResponse;
   }
   async update(id: string, content: UpdatePasswordModel) {
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
     }
-    const contents = await readFile(pathToDb, 'utf-8');
-    const users = JSON.parse(contents);
+    const userData = database.getUserById(id);
     const timestampOfUpdate = Date.now();
-    if (!users[id]) {
+    if (!userData) {
       return HTTP_CODE.NOT_FOUND;
     }
-    if (users[id].password !== content.oldPassword) {
+    if (userData.password !== content.oldPassword) {
       return HTTP_CODE.FORBIDDEN;
     }
-    users[id].password = content.newPassword;
-    users[id].updatedAt = timestampOfUpdate;
-    users[id].version += 1;
-    await writeFile(pathToDb, JSON.stringify(users));
+    userData.password = content.newPassword;
+    userData.updatedAt = timestampOfUpdate;
+    userData.version += 1;
+    const { password, ...response } = userData;
+    const updatedUsers = database.getUsers.map((user) =>
+      user.id === userData.id ? userData : user,
+    );
+    database.setUsers(updatedUsers);
+    return response as UserResponse;
   }
   async delete(id: string) {
-    const content = await readFile(pathToDb, 'utf-8');
-    const users = JSON.parse(content);
+    const users = database.getUserById(id);
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
     }
-    if (!users[id]) {
+    if (!users) {
       return HTTP_CODE.NOT_FOUND;
     }
-    delete users[id];
-    await writeFile(pathToDb, JSON.stringify(users));
+    database.removeUser(id);
   }
 }

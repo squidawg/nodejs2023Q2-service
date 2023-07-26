@@ -28,8 +28,10 @@ export class UsersController {
     return responseHandler(err, response, HTTP_CODE.OK, user);
   }
   @Post()
-  createUser(@Body() content: CreateUserDto) {
-    return this.usersService.create(content);
+  async createUser(@Body() content: CreateUserDto, @Res() response) {
+    const user = await this.usersService.create(content);
+    const err = errorHandler(user, ERROR_MSG.USER_ID);
+    return responseHandler(err, response, HTTP_CODE.CREATED, user);
   }
   @Put('/:id')
   async updateUser(
