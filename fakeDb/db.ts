@@ -3,7 +3,6 @@ import { Track } from '../src/track/model/track.model';
 import { Artist } from '../src/artist/model/artist.model';
 import { User } from '../src/users/model/users.model';
 import { v4 } from 'uuid';
-import { IsNotEmpty, IsString } from "class-validator";
 export class DataStorage {
   //storage
   private artists: Artist[] = [];
@@ -115,6 +114,7 @@ export class Favs {
   albums: Album[] = [];
   artists: Artist[] = [];
   tracks: Track[] = [];
+  //fav/album route
   getAlbumById(id: string) {
     return this.albums.find((album) => album.id === id);
   }
@@ -128,6 +128,13 @@ export class Favs {
     const index = this.albums.findIndex((album) => album.id === id);
     this.albums = this.albums.splice(index, 1).filter((odj) => !odj);
   }
+  setAlbums(albums: Album[]) {
+    this.albums = albums;
+  }
+  get getAlbums() {
+    return this.albums;
+  }
+  //fav/artist route
   getArtistById(id: string) {
     return this.artists.find((artist) => artist.id === id);
   }
@@ -139,13 +146,26 @@ export class Favs {
   }
   delArtist(id: string) {
     const index = this.artists.findIndex((artist) => artist.id === id);
-    this.artists.splice(index, 1);
+    this.artists.splice(index, 1).filter((odj) => !odj);
   }
-  setTracks(track: Track) {
+  get getArtists() {
+    return this.artists;
+  }
+  setArtists(artists: Artist[]) {
+    this.artists = artists;
+  }
+  //fav/track route
+  setTrack(track: Track) {
     if (!track) {
       return;
     }
     this.tracks.push(track);
+  }
+  setTracks(tracks: Track[]) {
+    this.tracks = tracks;
+  }
+  get getTracks() {
+    return this.tracks;
   }
   delTracks(id: string) {
     const index = this.tracks.findIndex((track) => track.id === id);
@@ -154,10 +174,4 @@ export class Favs {
   getTrackById(id: string) {
     return this.tracks.find((track) => track.id === id);
   }
-}
-
-export class FavDto {
-  @IsString()
-  @IsNotEmpty()
-  id: string;
 }
