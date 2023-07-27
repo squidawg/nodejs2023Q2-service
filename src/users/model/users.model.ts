@@ -1,3 +1,6 @@
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
 export interface User {
   id: string; // uuid v4
   login: string;
@@ -7,7 +10,59 @@ export interface User {
   updatedAt: number; // timestamp of last update
 }
 
-export type CreatedUser = Required<Pick<User, 'login' | 'password'>>;
-export type UserResponse = Required<
-  Pick<User, 'id' | 'login' | 'version' | 'createdAt' | 'updatedAt'>
->;
+export class CreatedUser implements Partial<User> {
+  @IsString()
+  @IsNotEmpty()
+  login: string;
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}
+export class UserData implements User {
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ example: 'uuid' })
+  id: string;
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ example: 'MusicListener' })
+  login: string;
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ example: 'MyPassword' })
+  password: string;
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 'timestamp' })
+  createdAt: number;
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 'timestamp' })
+  updatedAt: number;
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 'number' })
+  version: number;
+}
+export class UserResponse implements Partial<User> {
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ example: 'uuid' })
+  id: string;
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({ example: 'MusicListener' })
+  login: string;
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 'timestamp' })
+  createdAt: number;
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 'timestamp' })
+  updatedAt: number;
+  @IsNumber()
+  @IsNotEmpty()
+  @ApiProperty({ example: 'number' })
+  version: number;
+}

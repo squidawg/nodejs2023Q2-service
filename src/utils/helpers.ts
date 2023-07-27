@@ -10,6 +10,7 @@ import { Album } from "../album/model/album.model";
 import { Track } from "../track/model/track.model";
 import { DataStorage, Favs } from "../../fakeDb/db";
 import { Artist } from "../artist/model/artist.model";
+import { ApiProperty } from "@nestjs/swagger";
 
 export const database = new DataStorage();
 export const favorites = new Favs();
@@ -38,4 +39,13 @@ export function responseHandler(
   return err
     ? response.status(err.getStatus()).send(err.getResponse())
     : response.status(status).send(content);
+}
+
+export class ErrorResponse {
+  @ApiProperty({ example: '4xx' })
+  statusCode: number;
+  @ApiProperty({ example: 'reason' })
+  message: string;
+  @ApiProperty({ example: 'error_message' })
+  error: string;
 }

@@ -9,27 +9,73 @@ import {
   Res,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
-import { errorHandler, responseHandler } from '../utils/helpers';
+import { errorHandler, ErrorResponse, responseHandler } from "../utils/helpers";
 import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
 import { CreateAlbumDto } from './dto/CreateAlbumDto';
-
+import {
+  ApiBadRequestResponse,
+  ApiBody, ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation, ApiResponse,
+  ApiTags
+} from "@nestjs/swagger";
+@ApiTags('album')
 @Controller('album')
 export class AlbumController {
   constructor(private albumService: AlbumService) {}
+  @ApiOperation({ summary: 'Get all records' })
+  @ApiOkResponse({
+    description: 'Get all records.',
+    type: [CreateAlbumDto],
+  })
   @Get()
   getAlbums() {
     return this.albumService.findAll();
   }
+  @ApiOperation({ summary: 'Get record by Id' })
+  @ApiBadRequestResponse({
+    description: 'trackId is invalid (not uuid)',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: "record with id === trackId doesn't exist",
+    type: ErrorResponse,
+  })
+  @ApiOkResponse({
+    description: 'Get all records.',
+    type: [CreateAlbumDto],
+  })
   @Get('/:id')
   async getAlbum(@Param('id') id: string, @Res() response) {
     const album = await this.albumService.findOne(id);
     const err = errorHandler(album, ERROR_MSG.TRACK_ID);
     return responseHandler(err, response, HTTP_CODE.OK, album);
   }
+  @ApiOperation({ summary: 'Add record' })
+  @ApiCreatedResponse({ type: CreateAlbumDto })
+  @ApiBadRequestResponse({
+    description: 'request body does not contain required fields',
+    type: ErrorResponse,
+  })
+  @ApiBody({ type: CreateAlbumDto })
   @Post()
   async create(@Body() content: CreateAlbumDto) {
     return this.albumService.create(content);
   }
+  @ApiOperation({ summary: 'Update record' })
+  @ApiOkResponse({
+    description: 'Get all records.',
+    type: [CreateAlbumDto],
+  })
+  @ApiBadRequestResponse({
+    description: 'trackId is invalid (not uuid)',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: "record with id === trackId doesn't exist",
+    type: ErrorResponse,
+  })
   @Put('/:id')
   async update(
     @Param('id') id: string,
@@ -40,6 +86,19 @@ export class AlbumController {
     const err = errorHandler(artist, ERROR_MSG.TRACK_ID);
     return responseHandler(err, response, HTTP_CODE.OK, artist);
   }
+  @ApiOperation({ summary: 'Delete record' })
+  @ApiResponse({
+    status: 204,
+    description: 'Entity deleted, no return content',
+  })
+  @ApiBadRequestResponse({
+    description: 'trackId is invalid (not uuid)',
+    type: ErrorResponse,
+  })
+  @ApiNotFoundResponse({
+    description: "record with id === trackId doesn't exist",
+    type: ErrorResponse,
+  })
   @Delete('/:id')
   async delete(@Param('id') id: string, @Res() response) {
     const artist = await this.albumService.delete(id);
