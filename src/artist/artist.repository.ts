@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { validate, v4 } from 'uuid';
 import { Artist, CreatedArtist } from './model/artist.model';
 import { HTTP_CODE } from '../utils/util.model';
-import { database } from '../utils/helpers';
+import { database, favorites } from '../utils/helpers';
 
 @Injectable()
 export class ArtistRepository {
@@ -59,5 +59,6 @@ export class ArtistRepository {
     database.getTracks.map((obj) =>
       obj.artistId === id ? (obj.artistId = null) : obj,
     );
+    favorites.delArtist(id);
   }
 }

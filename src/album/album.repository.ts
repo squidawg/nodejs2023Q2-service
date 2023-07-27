@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { v4, validate } from 'uuid';
 import { HTTP_CODE } from '../utils/util.model';
 import { Album } from './model/album.model';
-import { database } from '../utils/helpers';
+import { database, favorites } from "../utils/helpers";
 
 @Injectable()
 export class AlbumRepository {
   async findAll() {
     return database.getAlbums;
   }
+
   async finOne(id: string) {
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
@@ -19,6 +20,7 @@ export class AlbumRepository {
     }
     return album;
   }
+
   async create(artist: Album) {
     const id = v4();
     const newAlbum = {
@@ -28,6 +30,7 @@ export class AlbumRepository {
     database.setAlbum(newAlbum);
     return newAlbum;
   }
+
   async update(id: string, content: Album) {
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
@@ -43,6 +46,7 @@ export class AlbumRepository {
     database.setAlbums(updatedAlbums);
     return updatedAlbum;
   }
+
   async delete(id: string) {
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
@@ -56,5 +60,6 @@ export class AlbumRepository {
     database.getTracks.map((obj) =>
       obj.albumId === id ? (obj.albumId = null) : obj,
     );
+    favorites.delAlbum(id);
   }
 }

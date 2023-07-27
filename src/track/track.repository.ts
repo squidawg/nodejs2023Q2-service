@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { validate, v4 } from 'uuid';
 import { Track } from './model/track.model';
 import { HTTP_CODE } from '../utils/util.model';
-import { database } from '../utils/helpers';
+import { database, favorites } from "../utils/helpers";
 
 @Injectable()
 export class TrackRepository {
@@ -52,5 +52,6 @@ export class TrackRepository {
       return HTTP_CODE.NOT_FOUND;
     }
     database.removeTrack(id);
+    favorites.delTracks(id)
   }
 }
