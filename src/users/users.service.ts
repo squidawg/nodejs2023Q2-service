@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
-import { CreatedUser } from './model/users.model';
+import { CreateUserReq } from './model/users.model';
 import { UpdatePasswordModel } from './model/UpdatePasswordModel';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class UsersService {
   findAll() {
     return this.usersRepository.findAll();
   }
-  create(content: CreatedUser) {
+  create(content: CreateUserReq) {
     return this.usersRepository.create(content);
   }
   update(id: string, content: UpdatePasswordModel) {

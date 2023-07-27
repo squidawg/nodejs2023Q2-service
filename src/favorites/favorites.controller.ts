@@ -1,15 +1,17 @@
 import { Controller, Delete, Get, Param, Post, Res } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
-import { errorHandler, ErrorResponse, responseHandler } from "../utils/helpers";
+import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
 import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
+import { Favs } from '../../fakeDb/db';
 import {
-  ApiBadRequestResponse, ApiNotFoundResponse,
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
-  ApiOperation, ApiResponse,
+  ApiOperation,
+  ApiResponse,
   ApiTags,
-  ApiUnprocessableEntityResponse
-} from "@nestjs/swagger";
-import { Favs } from "../../fakeDb/db";
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger';
 @ApiTags('favs')
 @Controller('favs')
 export class FavoritesController {

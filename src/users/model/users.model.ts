@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { v4 } from 'uuid';
 
 export interface User {
   id: string; // uuid v4
@@ -10,7 +11,7 @@ export interface User {
   updatedAt: number; // timestamp of last update
 }
 
-export class CreatedUser implements Partial<User> {
+export class CreateUserReq implements Partial<User> {
   @IsString()
   @IsNotEmpty()
   login: string;
@@ -43,8 +44,17 @@ export class UserData implements User {
   @IsNotEmpty()
   @ApiProperty({ example: 'number' })
   version: number;
+  constructor(login: string, password: string) {
+    const timestampOfCreation = Date.now();
+    this.id = v4();
+    this.login = login;
+    this.password = password;
+    this.createdAt = timestampOfCreation;
+    this.updatedAt = timestampOfCreation;
+    this.version = 1;
+  }
 }
-export class UserResponse implements Partial<User> {
+export class CreateUserRes implements Partial<User> {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({ example: 'uuid' })

@@ -23,7 +23,7 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePasswordDto';
 import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
 import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
-import { UserData, UserResponse } from './model/users.model';
+import { UserData, CreateUserRes } from './model/users.model';
 @ApiTags('user')
 @Controller('user')
 export class UsersController {
@@ -57,7 +57,7 @@ export class UsersController {
     return responseHandler(err, response, HTTP_CODE.OK, user);
   }
   @ApiOperation({ summary: 'Add User' })
-  @ApiCreatedResponse({ description: 'Get record', type: UserResponse })
+  @ApiCreatedResponse({ description: 'Get record', type: CreateUserRes })
   @ApiBadRequestResponse({
     description: 'Request body does not contain required fields',
     type: ErrorResponse,

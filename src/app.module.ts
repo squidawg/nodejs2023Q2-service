@@ -20,7 +20,7 @@ import { AlbumRepository } from './album/album.repository';
 import { FavoritesController } from './favorites/favorites.controller';
 import { FavoritesModule } from './favorites/favorites.module';
 import { FavoritesService } from './favorites/favorites.service';
-import { FavoritesRepository } from "./favorites/favorites.repository";
+import { FavoritesRepository } from './favorites/favorites.repository';
 
 @Module({
   imports: [

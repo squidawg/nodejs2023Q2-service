@@ -9,17 +9,19 @@ import {
   Res,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
-import { errorHandler, ErrorResponse, responseHandler } from "../utils/helpers";
+import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
 import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
 import { CreateAlbumDto } from './dto/CreateAlbumDto';
 import {
   ApiBadRequestResponse,
-  ApiBody, ApiCreatedResponse,
+  ApiBody,
+  ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiOperation, ApiResponse,
-  ApiTags
-} from "@nestjs/swagger";
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 @ApiTags('album')
 @Controller('album')
 export class AlbumController {

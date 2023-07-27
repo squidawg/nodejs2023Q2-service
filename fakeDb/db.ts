@@ -2,10 +2,9 @@ import { Album } from '../src/album/model/album.model';
 import { Track } from '../src/track/model/track.model';
 import { Artist } from '../src/artist/model/artist.model';
 import { User } from '../src/users/model/users.model';
-import { v4 } from 'uuid';
-import { Favorites } from "../src/favorites/model/favorites.model";
-import { IsArray } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
+import { Favorites } from '../src/favorites/model/favorites.model';
+import { IsArray } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 export class DataStorage {
   //storage
   private artists: Artist[] = [];
@@ -94,25 +93,6 @@ export class DataStorage {
   }
   //favs route methods
 }
-
-export class UserData implements User {
-  createdAt: number;
-  id: string;
-  login: string;
-  password: string;
-  updatedAt: number;
-  version: number;
-  constructor(login: string, password: string) {
-    const timestampOfCreation = Date.now();
-    this.id = v4();
-    this.login = login;
-    this.password = password;
-    this.createdAt = timestampOfCreation;
-    this.updatedAt = timestampOfCreation;
-    this.version = 1;
-  }
-}
-
 export class Favs implements Favorites {
   @IsArray()
   @ApiProperty({ example: '[]' })

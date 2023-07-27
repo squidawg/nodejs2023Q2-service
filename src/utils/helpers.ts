@@ -2,20 +2,20 @@ import {
   BadRequestException,
   ForbiddenException,
   NotFoundException,
-  UnprocessableEntityException
-} from "@nestjs/common";
-import { ERROR_MSG, HTTP_CODE } from "./util.model";
-import { UserResponse } from "../users/model/users.model";
-import { Album } from "../album/model/album.model";
-import { Track } from "../track/model/track.model";
-import { DataStorage, Favs } from "../../fakeDb/db";
-import { Artist } from "../artist/model/artist.model";
-import { ApiProperty } from "@nestjs/swagger";
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { ERROR_MSG, HTTP_CODE } from './util.model';
+import { CreateUserRes } from '../users/model/users.model';
+import { Album } from '../album/model/album.model';
+import { Track } from '../track/model/track.model';
+import { DataStorage, Favs } from '../../fakeDb/db';
+import { Artist } from '../artist/model/artist.model';
+import { ApiProperty } from '@nestjs/swagger';
 
 export const database = new DataStorage();
 export const favorites = new Favs();
 export const errorHandler = (
-  user: Artist | Track | Album | UserResponse | HTTP_CODE,
+  user: Artist | Track | Album | CreateUserRes | HTTP_CODE,
   message: ERROR_MSG,
 ) => {
   switch (user) {
@@ -34,7 +34,7 @@ export function responseHandler(
   err: BadRequestException | NotFoundException | ForbiddenException,
   response,
   status: HTTP_CODE,
-  content: Artist | Track | Album | UserResponse | HTTP_CODE | '' = '',
+  content: Artist | Track | Album | CreateUserRes | HTTP_CODE | '' = '',
 ) {
   return err
     ? response.status(err.getStatus()).send(err.getResponse())

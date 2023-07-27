@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreatedUser, UserResponse } from './model/users.model';
+import { CreateUserReq, UserData, CreateUserRes } from './model/users.model';
 import { UpdatePasswordModel } from './model/UpdatePasswordModel';
 import { validate } from 'uuid';
 import { HTTP_CODE } from '../utils/util.model';
-import { UserData } from '../../fakeDb/db';
 import { database } from '../utils/helpers';
 @Injectable()
 export class UsersRepository {
@@ -20,11 +19,11 @@ export class UsersRepository {
   async findAll() {
     return database.getUsers;
   }
-  create(user: CreatedUser) {
+  create(user: CreateUserReq) {
     const newUser = new UserData(user.login, user.password);
     database.setUser(newUser);
     const { password, ...response } = newUser;
-    return response as UserResponse;
+    return response as CreateUserRes;
   }
   async update(id: string, content: UpdatePasswordModel) {
     if (!validate(id)) {
@@ -46,7 +45,7 @@ export class UsersRepository {
       user.id === userData.id ? userData : user,
     );
     database.setUsers(updatedUsers);
-    return response as UserResponse;
+    return response as CreateUserRes;
   }
   async delete(id: string) {
     const users = database.getUserById(id);

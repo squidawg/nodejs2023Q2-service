@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { v4, validate } from 'uuid';
 import { HTTP_CODE } from '../utils/util.model';
 import { Album } from './model/album.model';
-import { database, favorites } from "../utils/helpers";
+import { database, favorites } from '../utils/helpers';
 
 @Injectable()
 export class AlbumRepository {
