@@ -21,7 +21,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-@ApiTags('artist')
+@ApiTags('Artist Api')
 @Controller('artist')
 export class ArtistController {
   constructor(private artistService: ArtistService) {}

@@ -24,7 +24,7 @@ import { UpdatePasswordDto } from './dto/UpdatePasswordDto';
 import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
 import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
 import { UserData, CreateUserRes } from './model/users.model';
-@ApiTags('user')
+@ApiTags('User Api')
 @Controller('user')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -40,7 +40,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Get User' })
   @ApiOkResponse({
     description: 'Get record',
-    type: UserData,
+    type: CreateUserRes,
   })
   @ApiBadRequestResponse({
     description: 'TrackId is invalid (not uuid)',
@@ -71,7 +71,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Update User' })
   @ApiOkResponse({
     description: 'Updated record',
-    type: UserData,
+    type: CreateUserRes,
   })
   @ApiBadRequestResponse({
     description: 'TrackId is invalid (not uuid)',

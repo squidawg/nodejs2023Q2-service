@@ -4,7 +4,7 @@ import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
 import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
 import { Favs } from '../../fakeDb/db';
 import {
-  ApiBadRequestResponse,
+  ApiBadRequestResponse, ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -12,7 +12,7 @@ import {
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
-@ApiTags('favs')
+@ApiTags('Favorites Api')
 @Controller('favs')
 export class FavoritesController {
   constructor(private favoriteService: FavoritesService) {}
@@ -26,7 +26,7 @@ export class FavoritesController {
     return this.favoriteService.findAll();
   }
   @ApiOperation({ summary: 'Add record' })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'Created',
   })
   @ApiBadRequestResponse({
@@ -61,7 +61,7 @@ export class FavoritesController {
     return responseHandler(err, response, HTTP_CODE.DELETED, track);
   }
   @ApiOperation({ summary: 'Add record' })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'Created',
   })
   @ApiBadRequestResponse({
@@ -96,7 +96,7 @@ export class FavoritesController {
     return responseHandler(err, response, HTTP_CODE.DELETED, album);
   }
   @ApiOperation({ summary: 'Add record' })
-  @ApiOkResponse({
+  @ApiCreatedResponse({
     description: 'Created',
   })
   @ApiBadRequestResponse({

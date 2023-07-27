@@ -22,7 +22,7 @@ import {
   ApiCreatedResponse,
   ApiResponse,
 } from '@nestjs/swagger';
-@ApiTags('track')
+@ApiTags('Track Api')
 @Controller('track')
 export class TrackController {
   constructor(private trackService: TrackService) {}
@@ -108,3 +108,4 @@ export class TrackController {
     return responseHandler(err, response, HTTP_CODE.DELETED);
   }
 }
+

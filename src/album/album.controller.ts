@@ -22,7 +22,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-@ApiTags('album')
+@ApiTags('Album Api')
 @Controller('album')
 export class AlbumController {
   constructor(private albumService: AlbumService) {}
