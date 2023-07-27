@@ -173,7 +173,6 @@ describe('Favorites (e2e)', () => {
       const responseAfterDeletion = await unauthorizedRequest
         .get(favoritesRoutes.getAll)
         .set(commonHeaders);
-
       expect(responseAfterDeletion.status).toBe(StatusCodes.OK);
 
       const artistSearchRes = responseAfterDeletion.body.artists.find(

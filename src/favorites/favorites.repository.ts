@@ -9,7 +9,6 @@ export class FavoritesRepository {
     return favorites;
   }
   create(cmd: string, id: string) {
-    console.log(cmd, id);
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
     }
@@ -19,7 +18,7 @@ export class FavoritesRepository {
         if (!track) {
           return HTTP_CODE.UNPROC_CONTENT;
         }
-        favorites.setTracks(track);
+        favorites.setTrack(track);
         break;
       case 'album':
         const album = database.getAlbumById(id);
