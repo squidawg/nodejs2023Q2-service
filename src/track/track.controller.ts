@@ -108,4 +108,3 @@ export class TrackController {
     return responseHandler(err, response, HTTP_CODE.DELETED);
   }
 }
-

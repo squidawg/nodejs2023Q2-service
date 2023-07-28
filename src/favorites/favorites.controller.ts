@@ -4,7 +4,8 @@ import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
 import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
 import { Favs } from '../../fakeDb/db';
 import {
-  ApiBadRequestResponse, ApiCreatedResponse,
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
