@@ -1,23 +1,69 @@
 import { Injectable } from '@nestjs/common';
-import { AlbumRepository } from './album.repository';
 import { CreateAlbumDto } from './dto/CreateAlbumDto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AlbumEntity } from './entity/album.entity';
+import { Repository } from 'typeorm';
+import { v4, validate } from 'uuid';
+import { HTTP_CODE } from '../utils/util.model';
+import { Album } from './model/album.model';
 
 @Injectable()
 export class AlbumService {
-  constructor(private albumRepository: AlbumRepository) {}
+  constructor(
+    @InjectRepository(AlbumEntity) private repo: Repository<AlbumEntity>,
+  ) {}
   findAll() {
-    return this.albumRepository.findAll();
+    return this.repo.find();
   }
-  findOne(id: string) {
-    return this.albumRepository.finOne(id);
+  async findOne(id: string) {
+    if (!validate(id)) {
+      return HTTP_CODE.BAD_REQUEST;
+    }
+    const album = await this.repo.findOne({ where: { id } });
+    if (!album) {
+      return HTTP_CODE.NOT_FOUND;
+    }
+    return album;
   }
-  create(content: CreateAlbumDto) {
-    return this.albumRepository.create(content);
+  async create(content: CreateAlbumDto) {
+    const id = v4();
+    const newAlbum: Album = {
+      id,
+      ...content,
+    };
+    const album = await this.repo.create(newAlbum);
+    await this.repo.save(album);
+    return newAlbum;
   }
-  update(id: string, content: CreateAlbumDto) {
-    return this.albumRepository.update(id, content);
+  async update(id: string, content: CreateAlbumDto) {
+    if (!validate(id)) {
+      return HTTP_CODE.BAD_REQUEST;
+    }
+    const album = await this.repo.findOne({ where: { id } });
+    if (!album) {
+      return HTTP_CODE.NOT_FOUND;
+    }
+    const UpdatedAlbum = { id, ...content };
+    await this.repo.save(UpdatedAlbum);
+    return UpdatedAlbum;
   }
-  delete(id: string) {
-    return this.albumRepository.delete(id);
+  async delete(id: string) {
+    if (!validate(id)) {
+      return HTTP_CODE.BAD_REQUEST;
+    }
+    const album = await this.repo.findOne({ where: { id } });
+    if (!album) {
+      return HTTP_CODE.NOT_FOUND;
+    }
+    Object.assign(album);
+    await this.repo.delete(album);
+    //dont forget to delete from favorites
+    // database.removeAlbum(id);
+    // **set null to album property in db
+    // database.getTracks.map((obj) =>
+    //   obj.albumId === id ? (obj.albumId = null) : obj,
+    // );
+    // favorites.delAlbum(id);
+    return HTTP_CODE.DELETED;
   }
 }
