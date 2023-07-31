@@ -1,12 +1,12 @@
-import { Column, PrimaryColumn } from 'typeorm';
-
-export class Album {
+import { Column, Entity, PrimaryColumn } from 'typeorm';
+@Entity()
+export class AlbumEntity {
   @PrimaryColumn()
   id: string; // uuid v4
   @Column()
   name: string;
   @Column()
   year: number;
-  @Column()
-  artistId?: string; // refers to Artist
+  @Column({ nullable: true })
+  artistId: string; // refers to Artist
 }

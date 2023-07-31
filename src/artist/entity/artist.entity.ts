@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class Artist {
+export class ArtistEntity {
   @PrimaryColumn()
   id: string; // uuid v4
   @Column()
