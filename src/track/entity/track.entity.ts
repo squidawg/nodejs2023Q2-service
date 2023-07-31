@@ -6,9 +6,9 @@ export class TrackEntity {
   id: string; // uuid v4
   @Column()
   name: string;
-  @Column({ nullable: true})
+  @Column({ nullable: true })
   artistId: string; // refers to Artist
-  @Column({ nullable: true})
+  @Column({ nullable: true })
   albumId?: string; // refers to Album
   @Column()
   duration: number; // integer number

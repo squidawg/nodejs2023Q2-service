@@ -56,7 +56,7 @@ export class ArtistService {
       return HTTP_CODE.NOT_FOUND;
     }
     Object.assign(artist);
-    await this.repo.delete(artist);
+    await this.repo.remove(artist);
     //dont forget to delete from favorites
     // database.removeArtist(id);
     // //set null to albums and tracks props
