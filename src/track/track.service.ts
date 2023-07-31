@@ -55,6 +55,9 @@ export class TrackService {
       return HTTP_CODE.NOT_FOUND;
     }
     Object.assign(track);
-    return this.repo.delete(track);
+    await this.repo.delete(track);
+    //dont forget to delete from favorites
+    // favorites.delTracks(id);
+    return HTTP_CODE.DELETED;
   }
 }
