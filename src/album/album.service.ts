@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/CreateAlbumDto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AlbumEntity } from './entity/album.entity';
@@ -6,11 +6,14 @@ import { Repository } from 'typeorm';
 import { v4, validate } from 'uuid';
 import { HTTP_CODE } from '../utils/util.model';
 import { Album } from './model/album.model';
+import { TrackService } from '../track/track.service';
 
 @Injectable()
 export class AlbumService {
   constructor(
-    @InjectRepository(AlbumEntity) private repo: Repository<AlbumEntity>) {}
+    @InjectRepository(AlbumEntity) private repo: Repository<AlbumEntity>,
+    @Inject(TrackService) private trackService: TrackService,
+  ) {}
   findAll() {
     return this.repo.find();
   }
@@ -26,7 +29,7 @@ export class AlbumService {
   }
   async create(content: Album) {
     const id = v4();
-    const newAlbum: Album = {
+    const newAlbum = {
       id,
       ...content,
     };
@@ -56,10 +59,14 @@ export class AlbumService {
     }
     Object.assign(album);
     await this.repo.remove(album);
-    // **set null to album property in db
-    // database.getTracks.map((obj) =>
-    //   obj.albumId === id ? (obj.albumId = null) : obj,
-    // );
+    const tracks = await this.trackService.findAll();
+    tracks.forEach((track) => {
+      if (track.albumId === id) {
+        const { id, ...rest } = track;
+        rest.albumId = null;
+        this.trackService.update(id, rest);
+      }
+    });
     //dont forget to delete from favorites
     // favorites.delAlbum(id);
     return HTTP_CODE.DELETED;

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/CreateArtistDto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -6,11 +6,15 @@ import { ArtistEntity } from './entity/artist.entity';
 import { v4, validate } from 'uuid';
 import { HTTP_CODE } from '../utils/util.model';
 import { Artist } from './model/artist.model';
+import { TrackService } from '../track/track.service';
+import { AlbumService } from '../album/album.service';
 
 @Injectable()
 export class ArtistService {
   constructor(
-    @InjectRepository(ArtistEntity) private repo: Repository<ArtistEntity>
+    @InjectRepository(ArtistEntity) private repo: Repository<ArtistEntity>,
+    @Inject(TrackService) private trackService: TrackService,
+    @Inject(AlbumService) private albumService: AlbumService
   ) {}
   async findOne(id: string) {
     if (!validate(id)) {
@@ -56,16 +60,23 @@ export class ArtistService {
       return HTTP_CODE.NOT_FOUND;
     }
     Object.assign(artist);
+    const albums = await this.albumService.findAll();
+    const tracks = await this.trackService.findAll();
+    albums.forEach((album) => {
+      if (album.artistId === id) {
+        const { id, ...rest } = album;
+        rest.artistId = null;
+        this.albumService.update(id, rest);
+      }
+    });
+    tracks.forEach((track) => {
+      if (track.artistId === id) {
+        const { id, ...rest } = track;
+        rest.artistId = null;
+        this.trackService.update(id, rest);
+      }
+    });
     await this.repo.remove(artist);
-    //dont forget to delete from favorites
-    // database.removeArtist(id);
-    // //set null to albums and tracks props
-    // database.getAlbums.map((obj) =>
-    //   obj.artistId === id ? (obj.artistId = null) : obj,
-    // );
-    // database.getTracks.map((obj) =>
-    //   obj.artistId === id ? (obj.artistId = null) : obj,
-    // );
     // favorites.delArtist(id);
     return HTTP_CODE.DELETED;
   }
