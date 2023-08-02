@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { CreateArtistDto } from './dto/CreateArtistDto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,8 +13,8 @@ import { AlbumService } from '../album/album.service';
 export class ArtistService {
   constructor(
     @InjectRepository(ArtistEntity) private repo: Repository<ArtistEntity>,
-    @Inject(TrackService) private trackService: TrackService,
-    @Inject(AlbumService) private albumService: AlbumService
+    @Inject(forwardRef(() => TrackService)) private trackService: TrackService,
+    @Inject(forwardRef(() => AlbumService)) private albumService: AlbumService
   ) {}
   async findOne(id: string) {
     if (!validate(id)) {
@@ -77,7 +77,29 @@ export class ArtistService {
       }
     });
     await this.repo.remove(artist);
-    // favorites.delArtist(id);
     return HTTP_CODE.DELETED;
+  }
+  findFavs() {
+    return this.repo.find({ where: { isFavourite: true } });
+  }
+  async addFavArtist(id: string) {
+    const artist = await this.repo.findOne({ where: { id } });
+    if (!artist) {
+      return HTTP_CODE.UNPROC_CONTENT;
+    }
+    const { isFavourite, ...rest } = artist;
+    const UpdatedArtist: ArtistEntity = { isFavourite: true, ...rest };
+    await this.repo.save(UpdatedArtist);
+    return UpdatedArtist;
+  }
+  async deleteFavArtist(id: string) {
+    const artist = await this.repo.findOne({ where: { id } });
+    if (!artist) {
+      return;
+    }
+    const { isFavourite, ...rest } = artist;
+    const UpdatedArtist: ArtistEntity = { isFavourite: false, ...rest };
+    await this.repo.save(UpdatedArtist);
+    return UpdatedArtist;
   }
 }

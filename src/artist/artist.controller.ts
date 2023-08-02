@@ -1,13 +1,13 @@
 import {
-  Body,
+  Body, ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
   Param,
   Post,
   Put,
-  Res,
-} from '@nestjs/common';
+  Res, UseInterceptors
+} from "@nestjs/common";
 import { CreateArtistDto } from './dto/CreateArtistDto';
 import { ArtistService } from './artist.service';
 import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
@@ -47,6 +47,7 @@ export class ArtistController {
     description: 'Get record.',
     type: CreateArtistDto,
   })
+  //@UseInterceptors(ClassSerializerInterceptor)
   @Get('/:id')
   async getArtist(@Param('id') id: string, @Res() response) {
     const artist = await this.artistService.findOne(id);
