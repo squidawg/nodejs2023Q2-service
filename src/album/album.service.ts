@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { CreateAlbumDto } from './dto/CreateAlbumDto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AlbumEntity } from './entity/album.entity';
@@ -12,10 +12,13 @@ import { TrackService } from '../track/track.service';
 export class AlbumService {
   constructor(
     @InjectRepository(AlbumEntity) private repo: Repository<AlbumEntity>,
-    @Inject(TrackService) private trackService: TrackService,
+    @Inject(forwardRef(() => TrackService)) private trackService: TrackService,
   ) {}
   findAll() {
     return this.repo.find();
+  }
+  findFavs() {
+    return this.repo.find({ where: { isFavourite: true } });
   }
   async findOne(id: string) {
     if (!validate(id)) {
@@ -58,7 +61,6 @@ export class AlbumService {
       return HTTP_CODE.NOT_FOUND;
     }
     Object.assign(album);
-    await this.repo.remove(album);
     const tracks = await this.trackService.findAll();
     tracks.forEach((track) => {
       if (track.albumId === id) {
@@ -67,8 +69,27 @@ export class AlbumService {
         this.trackService.update(id, rest);
       }
     });
-    //dont forget to delete from favorites
-    // favorites.delAlbum(id);
+    await this.repo.remove(album);
     return HTTP_CODE.DELETED;
+  }
+  async addFavAlbum(id: string) {
+    const album = await this.repo.findOne({ where: { id } });
+    if (!album) {
+      return HTTP_CODE.UNPROC_CONTENT;
+    }
+    const { isFavourite, ...rest } = album;
+    const UpdatedAlbum: AlbumEntity = { isFavourite: true, ...rest };
+    await this.repo.save(UpdatedAlbum);
+    return UpdatedAlbum;
+  }
+  async deleteFavAlbum(id: string) {
+    const album = await this.repo.findOne({ where: { id } });
+    if (!album) {
+      return;
+    }
+    const { isFavourite, ...rest } = album;
+    const UpdatedAlbum: AlbumEntity = { isFavourite: false, ...rest };
+    await this.repo.save(UpdatedAlbum);
+    return UpdatedAlbum;
   }
 }

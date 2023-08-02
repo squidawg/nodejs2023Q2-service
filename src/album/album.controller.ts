@@ -1,13 +1,13 @@
 import {
-  Body,
+  Body, ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
   Param,
   Post,
   Put,
-  Res,
-} from '@nestjs/common';
+  Res, UseInterceptors
+} from "@nestjs/common";
 import { AlbumService } from './album.service';
 import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
 import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
@@ -31,6 +31,7 @@ export class AlbumController {
     description: 'Get all records.',
     type: [CreateAlbumDto],
   })
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   getAlbums() {
     return this.albumService.findAll();
@@ -48,6 +49,7 @@ export class AlbumController {
     description: 'Get all records.',
     type: [CreateAlbumDto],
   })
+  // @UseInterceptors(ClassSerializerInterceptor)
   @Get('/:id')
   async getAlbum(@Param('id') id: string, @Res() response) {
     const album = await this.albumService.findOne(id);
