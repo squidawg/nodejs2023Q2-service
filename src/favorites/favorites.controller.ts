@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Post, Res } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Res, UseInterceptors, ClassSerializerInterceptor} from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
 import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
@@ -23,6 +23,7 @@ export class FavoritesController {
     type: Favs,
   })
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   getFavs() {
     return this.favoriteService.findAll();
   }
@@ -37,8 +38,8 @@ export class FavoritesController {
     description: 'Unprocessable Entity',
   })
   @Post('/track/:id')
-  addFavTrack(@Param('id') id: string, @Res() response) {
-    const track = this.favoriteService.create('track', id);
+  async addFavTrack(@Param('id') id: string, @Res() response) {
+    const track = await this.favoriteService.addFavTrack(id);
     const err = errorHandler(track, ERROR_MSG.TRACK_ID);
     return responseHandler(err, response, HTTP_CODE.CREATED, track);
   }
@@ -56,8 +57,8 @@ export class FavoritesController {
     type: ErrorResponse,
   })
   @Delete('/track/:id')
-  delFavTrack(@Param('id') id: string, @Res() response) {
-    const track = this.favoriteService.delete('track', id);
+  async delFavTrack(@Param('id') id: string, @Res() response) {
+    const track = await this.favoriteService.delFavTrack(id);
     const err = errorHandler(track, ERROR_MSG.TRACK_ID);
     return responseHandler(err, response, HTTP_CODE.DELETED, track);
   }
@@ -72,8 +73,8 @@ export class FavoritesController {
     description: 'Unprocessable Entity',
   })
   @Post('/album/:id')
-  addFavAlbum(@Param('id') id: string, @Res() response) {
-    const album = this.favoriteService.create('album', id);
+  async addFavAlbum(@Param('id') id: string, @Res() response) {
+    const album = await this.favoriteService.addFavAlbum(id);
     const err = errorHandler(album, ERROR_MSG.TRACK_ID);
     return responseHandler(err, response, HTTP_CODE.CREATED, album);
   }
@@ -91,8 +92,8 @@ export class FavoritesController {
     type: ErrorResponse,
   })
   @Delete('/album/:id')
-  delFavAlbum(@Param('id') id: string, @Res() response) {
-    const album = this.favoriteService.delete('album', id);
+  async delFavAlbum(@Param('id') id: string, @Res() response) {
+    const album = await this.favoriteService.delFavAlbum(id);
     const err = errorHandler(album, ERROR_MSG.TRACK_ID);
     return responseHandler(err, response, HTTP_CODE.DELETED, album);
   }
@@ -107,8 +108,8 @@ export class FavoritesController {
     description: 'Unprocessable Entity',
   })
   @Post('/artist/:id')
-  addFavArtist(@Param('id') id: string, @Res() response) {
-    const artist = this.favoriteService.create('artist', id);
+  async addFavArtist(@Param('id') id: string, @Res() response) {
+    const artist = await this.favoriteService.addFavArtist(id);
     const err = errorHandler(artist, ERROR_MSG.TRACK_ID);
     return responseHandler(err, response, HTTP_CODE.CREATED, artist);
   }
@@ -126,8 +127,8 @@ export class FavoritesController {
     type: ErrorResponse,
   })
   @Delete('/artist/:id')
-  delFavArtist(@Param('id') id: string, @Res() response) {
-    const artist = this.favoriteService.delete('artist', id);
+  async delFavArtist(@Param('id') id: string, @Res() response) {
+    const artist = await this.favoriteService.delFavArist( id);
     const err = errorHandler(artist, ERROR_MSG.ARTIST_ID);
     return responseHandler(err, response, HTTP_CODE.DELETED, artist);
   }
