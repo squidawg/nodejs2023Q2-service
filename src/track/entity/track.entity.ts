@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class TrackEntity {
@@ -12,4 +13,7 @@ export class TrackEntity {
   albumId?: string; // refers to Album
   @Column()
   duration: number; // integer number
+  @Exclude()
+  @Column('boolean', { default: false })
+  isFavourite = false;
 }

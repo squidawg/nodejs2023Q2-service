@@ -1,13 +1,13 @@
 import {
-  Body,
+  Body, ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
   Param,
   Post,
   Put,
-  Res,
-} from '@nestjs/common';
+  Res, UseInterceptors
+} from "@nestjs/common";
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/CreateTrackDto';
 import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
@@ -48,6 +48,7 @@ export class TrackController {
     description: 'Get record by Id.',
     type: CreateTrackDto,
   })
+  //@UseInterceptors(ClassSerializerInterceptor)
   @Get('/:id')
   async getTrack(@Param('id') id: string, @Res() response) {
     const track = await this.trackService.findOne(id);

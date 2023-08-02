@@ -21,8 +21,8 @@ export class TrackService {
     }
     return track;
   }
-  findAll() {
-    return this.repo.find();
+  async findAll() {
+    return await this.repo.find();
   }
   async create(content: Track) {
     const id = v4();
@@ -56,8 +56,28 @@ export class TrackService {
     }
     Object.assign(track);
     await this.repo.remove(track);
-    //dont forget to delete from favorites
-    // favorites.delTracks(id);
     return HTTP_CODE.DELETED;
+  }
+  findFavs() {
+    return this.repo.find({ where: { isFavourite: true } });
+  }
+  async addFavTrack(id: string) {
+    const track = await this.repo.findOne({ where: { id } });
+    if (!track) {
+      return HTTP_CODE.UNPROC_CONTENT;
+    }
+    const { isFavourite, ...rest } = track;
+    const UpdatedTrack: TrackEntity = { isFavourite: true, ...rest };
+    await this.repo.save(UpdatedTrack);
+    return UpdatedTrack;
+  }
+  async deleteFavTrack(id: string) {
+    const track = await this.repo.findOne({ where: { id } });
+    if (!track) {
+      return;
+    }
+    const { isFavourite, ...rest } = track;
+    const UpdatedTrack = { isFavourite: false, ...rest };
+    await this.repo.save(UpdatedTrack);
   }
 }
