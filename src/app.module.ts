@@ -6,21 +6,26 @@ import { TrackModule } from './track/track.module';
 import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { FavoritesModule } from './favorites/favorites.module';
-import { DatabaseModule } from './shared/typeorm.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getEnvPath } from './envs/envHelper';
-
+import { TypeOrmModule } from '@nestjs/typeorm';
+import typeorm from 'typeorm.config';
 const envFilePath: string = getEnvPath(`dist/envs`);
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath, isGlobal: true }),
+    ConfigModule.forRoot({ envFilePath, isGlobal: true, load: [typeorm] }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) =>
+        configService.get('typeorm'),
+    }),
     UsersModule,
     TrackModule,
     ArtistModule,
     AlbumModule,
     FavoritesModule,
-    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
