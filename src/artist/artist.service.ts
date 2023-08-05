@@ -2,7 +2,7 @@ import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { CreateArtistDto } from './dto/CreateArtistDto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ArtistEntity } from './entity/artist.entity';
+import { ArtistEntity } from './entities/artist.entity';
 import { v4, validate } from 'uuid';
 import { HTTP_CODE } from '../utils/util.model';
 import { Artist } from './model/artist.model';

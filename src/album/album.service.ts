@@ -1,7 +1,7 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { CreateAlbumDto } from './dto/CreateAlbumDto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AlbumEntity } from './entity/album.entity';
+import { AlbumEntity } from './entities/album.entity';
 import { Repository } from 'typeorm';
 import { v4, validate } from 'uuid';
 import { HTTP_CODE } from '../utils/util.model';
