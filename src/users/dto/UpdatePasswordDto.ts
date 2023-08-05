@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty } from 'class-validator';
-import { UpdatePasswordModel } from 'src/users/model/UpdatePasswordModel';
+import { UpdatePasswordModel } from '../model/UpdatePasswordModel';
 import { ApiProperty } from '@nestjs/swagger';
 export class UpdatePasswordDto implements UpdatePasswordModel {
   @IsString()

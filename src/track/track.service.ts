@@ -4,7 +4,7 @@ import { v4, validate } from 'uuid';
 import { HTTP_CODE } from '../utils/util.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TrackEntity } from './entity/track.entity';
+import { TrackEntity } from './entities/track.entity';
 
 @Injectable()
 export class TrackService {

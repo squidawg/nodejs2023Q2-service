@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import 'dotenv/config';
 const PORT = parseInt(process.env.PORT, 10) || 4000;
 console.log(`Server started on http://localhost:${PORT}`);
 async function bootstrap() {

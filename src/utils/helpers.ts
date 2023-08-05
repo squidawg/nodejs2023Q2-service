@@ -8,12 +8,9 @@ import { ERROR_MSG, HTTP_CODE } from './util.model';
 import { CreateUserRes } from '../users/model/users.model';
 import { Album } from '../album/model/album.model';
 import { Track } from '../track/model/track.model';
-import { DataStorage, Favs } from '../../fakeDb/db';
 import { Artist } from '../artist/model/artist.model';
 import { ApiProperty } from '@nestjs/swagger';
 
-export const database = new DataStorage();
-export const favorites = new Favs();
 export const errorHandler = (
   user: Artist | Track | Album | CreateUserRes | HTTP_CODE,
   message: ERROR_MSG,

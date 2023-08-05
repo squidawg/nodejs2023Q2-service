@@ -3,7 +3,7 @@ import { CreateUserReq, CreateUserRes, User, UserData } from "./model/users.mode
 import { UpdatePasswordModel } from './model/UpdatePasswordModel';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UsersEntity } from './entity/users.entity';
+import { UsersEntity } from './entities/users.entity';
 import { v4, validate } from 'uuid';
 import { HTTP_CODE } from '../utils/util.model';
 

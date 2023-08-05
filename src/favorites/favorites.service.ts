@@ -3,8 +3,8 @@ import { TrackService } from "../track/track.service";
 import { AlbumService } from "../album/album.service";
 import { HTTP_CODE } from "../utils/util.model";
 import { ArtistService } from "../artist/artist.service";
-import { TrackEntity } from "../track/entity/track.entity";
-import { AlbumEntity } from "../album/entity/album.entity";
+import { TrackEntity } from "../track/entities/track.entity";
+import { AlbumEntity } from "../album/entities/album.entity";
 import { validate } from "uuid";
 
 @Injectable()
