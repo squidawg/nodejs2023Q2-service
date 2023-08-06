@@ -444,7 +444,6 @@ describe('Favorites (e2e)', () => {
       const trackSearchResult = response.body.tracks.find(
         (track) => track.id === trackId,
       );
-      console.log(trackSearchResult);
       expect(trackSearchResult).toBeUndefined();
 
       const cleanupResponse = await unauthorizedRequest
