@@ -1,13 +1,15 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
-EXPOSE 4000
+EXPOSE ${PORT}
 
-WORKDIR /usr/app/src
+WORKDIR ${WORK_DIR}
 
 COPY package*.json .
 
-RUN npm install
+RUN npm install && npm cache clean --force
 
 COPY . .
+
+RUN npm run build
 
 CMD ["npm", "run", "start:migration:dev"]

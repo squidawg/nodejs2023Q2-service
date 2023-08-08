@@ -4,6 +4,5 @@ Dockerfile
 .git
 .github
 .gitignore
-.dockerignore
 dist
 README.md

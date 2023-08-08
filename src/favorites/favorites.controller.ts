@@ -1,8 +1,16 @@
-import { Controller, Delete, Get, Param, Post, Res, UseInterceptors, ClassSerializerInterceptor} from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Res,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
 import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
-import { Favs } from '../../fakeDb/db';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -13,6 +21,7 @@ import {
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
+import { Favs } from './model/favorites.model';
 @ApiTags('Favorites Api')
 @Controller('favs')
 export class FavoritesController {
@@ -128,7 +137,7 @@ export class FavoritesController {
   })
   @Delete('/artist/:id')
   async delFavArtist(@Param('id') id: string, @Res() response) {
-    const artist = await this.favoriteService.delFavArist( id);
+    const artist = await this.favoriteService.delFavArist(id);
     const err = errorHandler(artist, ERROR_MSG.ARTIST_ID);
     return responseHandler(err, response, HTTP_CODE.DELETED, artist);
   }
