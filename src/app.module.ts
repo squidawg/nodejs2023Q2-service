@@ -7,14 +7,11 @@ import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { getEnvPath } from './envs/envHelper';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeorm from 'typeorm.config';
-const envFilePath: string = getEnvPath(`dist/envs`);
-
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath, isGlobal: true, load: [typeorm] }),
+    ConfigModule.forRoot({ load: [typeorm] }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
