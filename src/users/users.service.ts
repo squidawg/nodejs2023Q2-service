@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserReq, CreateUserRes, User, UserData } from "./model/users.model";
+import { CreateUserReq, CreateUserRes } from './model/users.model';
 import { UpdatePasswordModel } from './model/UpdatePasswordModel';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -27,7 +27,7 @@ export class UsersService {
   }
   async create(content: CreateUserReq) {
     const timestampOfCreation = Date.now();
-    const test: User = {
+    const test: UsersEntity = {
       id: v4(),
       login: content.login,
       password: content.password,
@@ -37,9 +37,10 @@ export class UsersService {
     };
     const user = await this.repo.create(test);
     await this.repo.save(user);
-    const { password, ...response } = test;
-    return response as CreateUserRes;
+    delete test.password;
+    return test;
   }
+
   async update(id: string, content: UpdatePasswordModel) {
     if (!validate(id)) {
       return HTTP_CODE.BAD_REQUEST;
@@ -56,9 +57,9 @@ export class UsersService {
     user.createdAt = parseInt(String(user.createdAt));
     user.updatedAt = timestampOfUpdate;
     user.version += 1;
-    const { password, ...response } = user;
     await this.repo.save(user);
-    return response as CreateUserRes;
+    delete user.password;
+    return user as CreateUserRes;
   }
   async delete(id: string) {
     if (!validate(id)) {

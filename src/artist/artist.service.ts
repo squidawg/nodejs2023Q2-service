@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/CreateArtistDto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -14,7 +14,7 @@ export class ArtistService {
   constructor(
     @InjectRepository(ArtistEntity) private repo: Repository<ArtistEntity>,
     @Inject(forwardRef(() => TrackService)) private trackService: TrackService,
-    @Inject(forwardRef(() => AlbumService)) private albumService: AlbumService
+    @Inject(forwardRef(() => AlbumService)) private albumService: AlbumService,
   ) {}
   async findOne(id: string) {
     if (!validate(id)) {
@@ -87,8 +87,8 @@ export class ArtistService {
     if (!artist) {
       return HTTP_CODE.UNPROC_CONTENT;
     }
-    const { isFavourite, ...rest } = artist;
-    const UpdatedArtist: ArtistEntity = { isFavourite: true, ...rest };
+    delete artist.isFavourite;
+    const UpdatedArtist: ArtistEntity = { isFavourite: true, ...artist };
     await this.repo.save(UpdatedArtist);
     return UpdatedArtist;
   }
@@ -97,8 +97,8 @@ export class ArtistService {
     if (!artist) {
       return;
     }
-    const { isFavourite, ...rest } = artist;
-    const UpdatedArtist: ArtistEntity = { isFavourite: false, ...rest };
+    delete artist.isFavourite;
+    const UpdatedArtist: ArtistEntity = { isFavourite: false, ...artist };
     await this.repo.save(UpdatedArtist);
     return UpdatedArtist;
   }

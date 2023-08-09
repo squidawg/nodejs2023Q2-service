@@ -1,11 +1,11 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { TrackService } from "../track/track.service";
-import { AlbumService } from "../album/album.service";
-import { HTTP_CODE } from "../utils/util.model";
-import { ArtistService } from "../artist/artist.service";
-import { TrackEntity } from "../track/entities/track.entity";
-import { AlbumEntity } from "../album/entities/album.entity";
-import { validate } from "uuid";
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { TrackService } from '../track/track.service';
+import { AlbumService } from '../album/album.service';
+import { HTTP_CODE } from '../utils/util.model';
+import { ArtistService } from '../artist/artist.service';
+import { TrackEntity } from '../track/entities/track.entity';
+import { AlbumEntity } from '../album/entities/album.entity';
+import { validate } from 'uuid';
 
 @Injectable()
 export class FavoritesService {
@@ -62,7 +62,6 @@ export class FavoritesService {
   }
   async delete(cmd: string, id: string) {
     switch (cmd) {
-
       case 'album':
         const album = await this.albumsService.findOne(id);
         if (!album) {

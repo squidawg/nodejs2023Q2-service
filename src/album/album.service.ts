@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/CreateAlbumDto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AlbumEntity } from './entities/album.entity';
@@ -77,8 +77,8 @@ export class AlbumService {
     if (!album) {
       return HTTP_CODE.UNPROC_CONTENT;
     }
-    const { isFavourite, ...rest } = album;
-    const UpdatedAlbum: AlbumEntity = { isFavourite: true, ...rest };
+    delete album.isFavourite;
+    const UpdatedAlbum: AlbumEntity = { isFavourite: true, ...album };
     await this.repo.save(UpdatedAlbum);
     return UpdatedAlbum;
   }
@@ -87,8 +87,8 @@ export class AlbumService {
     if (!album) {
       return;
     }
-    const { isFavourite, ...rest } = album;
-    const UpdatedAlbum: AlbumEntity = { isFavourite: false, ...rest };
+    delete album.isFavourite;
+    const UpdatedAlbum: AlbumEntity = { isFavourite: false, ...album };
     await this.repo.save(UpdatedAlbum);
     return UpdatedAlbum;
   }

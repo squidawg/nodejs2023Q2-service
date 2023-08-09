@@ -1,13 +1,13 @@
 import {
-  Body, ClassSerializerInterceptor,
+  Body,
   Controller,
   Delete,
   Get,
   Param,
   Post,
   Put,
-  Res, UseInterceptors
-} from "@nestjs/common";
+  Res,
+} from '@nestjs/common';
 import { CreateArtistDto } from './dto/CreateArtistDto';
 import { ArtistService } from './artist.service';
 import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';

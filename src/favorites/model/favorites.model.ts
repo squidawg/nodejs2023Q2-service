@@ -1,8 +1,8 @@
-import { Artist } from "../../artist/model/artist.model";
-import { Album } from "../../album/model/album.model";
-import { Track } from "../../track/model/track.model";
-import { IsArray } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
+import { Artist } from '../../artist/model/artist.model';
+import { Album } from '../../album/model/album.model';
+import { Track } from '../../track/model/track.model';
+import { IsArray } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export interface Favorites {
   artists: Artist[]; // favorite artists ids

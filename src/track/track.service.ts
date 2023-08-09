@@ -66,8 +66,8 @@ export class TrackService {
     if (!track) {
       return HTTP_CODE.UNPROC_CONTENT;
     }
-    const { isFavourite, ...rest } = track;
-    const UpdatedTrack: TrackEntity = { isFavourite: true, ...rest };
+    delete track.isFavourite;
+    const UpdatedTrack: TrackEntity = { isFavourite: true, ...track };
     await this.repo.save(UpdatedTrack);
     return UpdatedTrack;
   }
@@ -76,8 +76,8 @@ export class TrackService {
     if (!track) {
       return;
     }
-    const { isFavourite, ...rest } = track;
-    const UpdatedTrack = { isFavourite: false, ...rest };
+    delete track.isFavourite;
+    const UpdatedTrack = { isFavourite: false, ...track };
     await this.repo.save(UpdatedTrack);
   }
 }
