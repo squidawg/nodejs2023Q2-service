@@ -19,7 +19,7 @@ npm install
 
 ## Running application
 
-### !!! Rename file development.env to .env. !!!
+### !!! Rename file development.env to .env !!!
 
 ### Run the next command in the terminal from root dir of a project 
 ### and wait till the app will be fully installed with Postgress:
@@ -40,12 +40,13 @@ After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 
 if for some reason you catch a message that migrations can't be generated due to lack of changes, 
-then you might need to drop your db manually or delete volumes with -v flag , to remove containers with images use --rmi all :
+then you might need to drop your db manually or delete volumes with -v flag ,
+to remove containers with images use --rmi all :
 ```
 docker-compose down -v
 docker-compose down --rmi all
 ```
-and repeat step previous step
+and repeat previous step
 
 ## Scan image for vulnerabilities
 ```
