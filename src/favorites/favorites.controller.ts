@@ -1,144 +1,57 @@
-import {
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Res,
-  UseInterceptors,
-  ClassSerializerInterceptor,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Res } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
-import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
-import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
-import {
-  ApiBadRequestResponse,
-  ApiCreatedResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-  ApiUnprocessableEntityResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { Favs } from './model/favorites.model';
+import { ApiDelete, ApiGet, ApiPost } from '../utils/decorator.service';
 @ApiTags('Favorites Api')
 @Controller('favs')
 export class FavoritesController {
   constructor(private favoriteService: FavoritesService) {}
-  @ApiOperation({ summary: 'Get all Records' })
-  @ApiOkResponse({
-    description: 'Get all records',
-    type: Favs,
-  })
+  @ApiGet(Favs)
   @Get()
-  @UseInterceptors(ClassSerializerInterceptor)
   getFavs() {
     return this.favoriteService.findAll();
   }
-  @ApiOperation({ summary: 'Add record' })
-  @ApiCreatedResponse({
-    description: 'Created',
-  })
-  @ApiBadRequestResponse({
-    description: 'Bad Request',
-  })
+  @ApiPost()
   @ApiUnprocessableEntityResponse({
-    description: 'Unprocessable Entity',
+    description: 'Unprocessable entity',
   })
   @Post('/track/:id')
-  async addFavTrack(@Param('id') id: string, @Res() response) {
-    const track = await this.favoriteService.addFavTrack(id);
-    const err = errorHandler(track, ERROR_MSG.TRACK_ID);
-    return responseHandler(err, response, HTTP_CODE.CREATED, track);
+  async addFavTrack(@Param('id') id: string) {
+    return await this.favoriteService.addFavTrack(id);
   }
-  @ApiOperation({ summary: 'Delete record' })
-  @ApiResponse({
-    status: 204,
-    description: 'User deleted, no return content',
-  })
-  @ApiBadRequestResponse({
-    description: 'TrackId is invalid (not uuid)',
-    type: ErrorResponse,
-  })
-  @ApiNotFoundResponse({
-    description: "Record with id === trackId doesn't exist",
-    type: ErrorResponse,
-  })
+  @ApiDelete()
   @Delete('/track/:id')
   async delFavTrack(@Param('id') id: string, @Res() response) {
     const track = await this.favoriteService.delFavTrack(id);
-    const err = errorHandler(track, ERROR_MSG.TRACK_ID);
-    return responseHandler(err, response, HTTP_CODE.DELETED, track);
+    return response.status(track).send();
   }
-  @ApiOperation({ summary: 'Add record' })
-  @ApiCreatedResponse({
-    description: 'Created',
-  })
-  @ApiBadRequestResponse({
-    description: 'Bad Request',
-  })
+  @ApiPost()
   @ApiUnprocessableEntityResponse({
     description: 'Unprocessable Entity',
   })
   @Post('/album/:id')
-  async addFavAlbum(@Param('id') id: string, @Res() response) {
-    const album = await this.favoriteService.addFavAlbum(id);
-    const err = errorHandler(album, ERROR_MSG.TRACK_ID);
-    return responseHandler(err, response, HTTP_CODE.CREATED, album);
+  async addFavAlbum(@Param('id') id: string) {
+    return await this.favoriteService.addFavAlbum(id);
   }
-  @ApiOperation({ summary: 'Delete record' })
-  @ApiResponse({
-    status: 204,
-    description: 'User deleted, no return content',
-  })
-  @ApiBadRequestResponse({
-    description: 'TrackId is invalid (not uuid)',
-    type: ErrorResponse,
-  })
-  @ApiNotFoundResponse({
-    description: "Record with id === trackId doesn't exist",
-    type: ErrorResponse,
-  })
+  @ApiDelete()
   @Delete('/album/:id')
   async delFavAlbum(@Param('id') id: string, @Res() response) {
     const album = await this.favoriteService.delFavAlbum(id);
-    const err = errorHandler(album, ERROR_MSG.TRACK_ID);
-    return responseHandler(err, response, HTTP_CODE.DELETED, album);
+    return response.status(album).send();
   }
-  @ApiOperation({ summary: 'Add record' })
-  @ApiCreatedResponse({
-    description: 'Created',
-  })
-  @ApiBadRequestResponse({
-    description: 'Bad Request',
-  })
+  @ApiPost()
   @ApiUnprocessableEntityResponse({
     description: 'Unprocessable Entity',
   })
   @Post('/artist/:id')
-  async addFavArtist(@Param('id') id: string, @Res() response) {
-    const artist = await this.favoriteService.addFavArtist(id);
-    const err = errorHandler(artist, ERROR_MSG.TRACK_ID);
-    return responseHandler(err, response, HTTP_CODE.CREATED, artist);
+  async addFavArtist(@Param('id') id: string) {
+    return await this.favoriteService.addFavArtist(id);
   }
-  @ApiOperation({ summary: 'Delete record' })
-  @ApiResponse({
-    status: 204,
-    description: 'User deleted, no return content',
-  })
-  @ApiBadRequestResponse({
-    description: 'TrackId is invalid (not uuid)',
-    type: ErrorResponse,
-  })
-  @ApiNotFoundResponse({
-    description: "Record with id === trackId doesn't exist",
-    type: ErrorResponse,
-  })
+  @ApiDelete()
   @Delete('/artist/:id')
   async delFavArtist(@Param('id') id: string, @Res() response) {
     const artist = await this.favoriteService.delFavArist(id);
-    const err = errorHandler(artist, ERROR_MSG.ARTIST_ID);
-    return responseHandler(err, response, HTTP_CODE.DELETED, artist);
+    return response.status(artist).send();
   }
 }
