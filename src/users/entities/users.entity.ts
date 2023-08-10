@@ -1,16 +1,16 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class UsersEntity {
-  @PrimaryColumn()
-  id: string; // uuid v4
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
   @Column()
   login: string;
   @Column()
   password: string;
   @Column()
-  version: number; // integer number, increments on update
+  version: number;
   @Column({ type: 'bigint' })
-  createdAt: number; // timestamp of creation
+  createdAt: number;
   @Column({ type: 'bigint' })
-  updatedAt: number; // timestamp of last update
+  updatedAt: number;
 }

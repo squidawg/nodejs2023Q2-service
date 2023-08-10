@@ -8,79 +8,41 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiForbiddenResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePasswordDto';
-import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
-import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
-import { UserData, CreateUserRes } from './model/users.model';
+import { UserData } from './model/users.model';
+import { Serialize } from '../interceptors/serialize';
+import {
+  ApiDelete,
+  ApiGet,
+  ApiGetById,
+  ApiPost,
+  ApiPut,
+  ErrorResponse,
+} from '../utils/decorator.service';
 @ApiTags('User Api')
+@Serialize(UserData)
 @Controller('user')
 export class UsersController {
   constructor(private usersService: UsersService) {}
-  @ApiOperation({ summary: 'Get all Users' })
-  @ApiOkResponse({
-    description: 'Get all records',
-    type: [UserData],
-  })
+  @ApiGet(UserData)
   @Get()
   getUsers() {
     return this.usersService.findAll();
   }
-  @ApiOperation({ summary: 'Get User' })
-  @ApiOkResponse({
-    description: 'Get record',
-    type: CreateUserRes,
-  })
-  @ApiBadRequestResponse({
-    description: 'TrackId is invalid (not uuid)',
-    type: ErrorResponse,
-  })
-  @ApiNotFoundResponse({
-    description: "Record with id === trackId doesn't exist",
-    type: ErrorResponse,
-  })
+  @ApiGetById(UserData)
   @Get('/:id')
-  async getUser(@Param('id') id: string, @Res() response) {
-    const user = await this.usersService.findOne(id);
-    const err = errorHandler(user, ERROR_MSG.USER_ID);
-    return responseHandler(err, response, HTTP_CODE.OK, user);
+  async getUser(@Param('id') id: string) {
+    return await this.usersService.findOne(id);
   }
-  @ApiOperation({ summary: 'Add User' })
-  @ApiCreatedResponse({ description: 'Get record', type: CreateUserRes })
-  @ApiBadRequestResponse({
-    description: 'Request body does not contain required fields',
-    type: ErrorResponse,
-  })
+  @ApiPost(UserData)
   @Post()
-  async createUser(@Body() content: CreateUserDto, @Res() response) {
-    const user = await this.usersService.create(content);
-    const err = errorHandler(user, ERROR_MSG.USER_ID);
-    return responseHandler(err, response, HTTP_CODE.CREATED, user);
+  async createUser(@Body() content: CreateUserDto) {
+    return await this.usersService.create(content);
   }
-  @ApiOperation({ summary: 'Update User' })
-  @ApiOkResponse({
-    description: 'Updated record',
-    type: CreateUserRes,
-  })
-  @ApiBadRequestResponse({
-    description: 'TrackId is invalid (not uuid)',
-    type: ErrorResponse,
-  })
-  @ApiNotFoundResponse({
-    description: "Record with id === trackId doesn't exist",
-    type: ErrorResponse,
-  })
+  @ApiPut(UserData)
   @ApiForbiddenResponse({
     description: 'oldPassword is wrong',
     type: ErrorResponse,
@@ -89,29 +51,13 @@ export class UsersController {
   async updateUser(
     @Param('id') id: string,
     @Body() content: UpdatePasswordDto,
-    @Res() response,
   ) {
-    const user = await this.usersService.update(id, content);
-    const err = errorHandler(user, ERROR_MSG.USER_ID);
-    return responseHandler(err, response, HTTP_CODE.OK, user);
+    return await this.usersService.update(id, content);
   }
-  @ApiOperation({ summary: 'Delete User' })
-  @ApiResponse({
-    status: 204,
-    description: 'User deleted, no return content',
-  })
-  @ApiBadRequestResponse({
-    description: 'TrackId is invalid (not uuid)',
-    type: ErrorResponse,
-  })
-  @ApiNotFoundResponse({
-    description: "Record with id === trackId doesn't exist",
-    type: ErrorResponse,
-  })
+  @ApiDelete()
   @Delete('/:id')
   async deleteUser(@Param('id') id: string, @Res() response) {
     const user = await this.usersService.delete(id);
-    const err = errorHandler(user, ERROR_MSG.USER_ID);
-    return responseHandler(err, response, HTTP_CODE.DELETED);
+    return response.status(user).send();
   }
 }
