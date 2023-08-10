@@ -1,7 +1,5 @@
 export interface Artist {
-  id?: string; // uuid v4
+  id?: string;
   name: string;
   grammy: boolean;
 }
-
-export type CreatedArtist = Required<Pick<Artist, 'name' | 'grammy'>>;

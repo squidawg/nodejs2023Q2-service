@@ -10,100 +10,45 @@ import {
 } from '@nestjs/common';
 import { CreateArtistDto } from './dto/CreateArtistDto';
 import { ArtistService } from './artist.service';
-import { errorHandler, ErrorResponse, responseHandler } from '../utils/helpers';
-import { ERROR_MSG, HTTP_CODE } from '../utils/util.model';
+import { ApiTags } from '@nestjs/swagger';
+import { Serialize } from '../interceptors/serialize';
 import {
-  ApiBadRequestResponse,
-  ApiCreatedResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+  ApiDelete,
+  ApiGet,
+  ApiGetById,
+  ApiPost,
+  ApiPut,
+} from '../utils/decorator.service';
+import { ArtistEntity } from './entities/artist.entity';
 @ApiTags('Artist Api')
+@Serialize(ArtistEntity)
 @Controller('artist')
 export class ArtistController {
   constructor(private artistService: ArtistService) {}
-  @ApiOperation({ summary: 'Get all records' })
-  @ApiOkResponse({
-    description: 'Get all records.',
-    type: [CreateArtistDto],
-  })
+  @ApiGet(CreateArtistDto)
   @Get()
   getArtists() {
     return this.artistService.findAll();
   }
-  @ApiOperation({ summary: 'Get record by Id' })
-  @ApiBadRequestResponse({
-    description: 'TrackId is invalid (not uuid)',
-    type: ErrorResponse,
-  })
-  @ApiNotFoundResponse({
-    description: "Record with id === trackId doesn't exist",
-    type: ErrorResponse,
-  })
-  @ApiOkResponse({
-    description: 'Get record.',
-    type: CreateArtistDto,
-  })
-  //@UseInterceptors(ClassSerializerInterceptor)
+  @ApiGetById(CreateArtistDto)
   @Get('/:id')
-  async getArtist(@Param('id') id: string, @Res() response) {
-    const artist = await this.artistService.findOne(id);
-    const err = errorHandler(artist, ERROR_MSG.TRACK_ID);
-    return responseHandler(err, response, HTTP_CODE.OK, artist);
+  async getArtist(@Param('id') id: string) {
+    return await this.artistService.findOne(id);
   }
-  @ApiOperation({ summary: 'Add record' })
-  @ApiCreatedResponse({ type: CreateArtistDto })
-  @ApiBadRequestResponse({
-    description: 'Request body does not contain required fields',
-    type: ErrorResponse,
-  })
+  @ApiPost(CreateArtistDto)
   @Post()
   async create(@Body() content: CreateArtistDto) {
-    return this.artistService.create(content);
+    return await this.artistService.create(content);
   }
-  @ApiOperation({ summary: 'Update record' })
-  @ApiOkResponse({
-    description: 'Updated record.',
-    type: CreateArtistDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'TrackId is invalid (not uuid)',
-    type: ErrorResponse,
-  })
-  @ApiNotFoundResponse({
-    description: "Record with id === trackId doesn't exist",
-    type: ErrorResponse,
-  })
+  @ApiPut(CreateArtistDto)
   @Put('/:id')
-  async update(
-    @Param('id') id: string,
-    @Body() content: CreateArtistDto,
-    @Res() response,
-  ) {
-    const artist = await this.artistService.update(id, content);
-    const err = errorHandler(artist, ERROR_MSG.TRACK_ID);
-    return responseHandler(err, response, HTTP_CODE.OK, artist);
+  async update(@Param('id') id: string, @Body() content: CreateArtistDto) {
+    return await this.artistService.update(id, content);
   }
-  @ApiOperation({ summary: 'Delete record' })
-  @ApiResponse({
-    status: 204,
-    description: 'Entity deleted, no return content',
-  })
-  @ApiBadRequestResponse({
-    description: 'TrackId is invalid (not uuid)',
-    type: ErrorResponse,
-  })
-  @ApiNotFoundResponse({
-    description: "Record with id === trackId doesn't exist",
-    type: ErrorResponse,
-  })
+  @ApiDelete()
   @Delete('/:id')
   async delete(@Param('id') id: string, @Res() response) {
     const artist = await this.artistService.delete(id);
-    const err = errorHandler(artist, ERROR_MSG.TRACK_ID);
-    return responseHandler(err, response, HTTP_CODE.DELETED);
+    return response.status(artist).send();
   }
 }
