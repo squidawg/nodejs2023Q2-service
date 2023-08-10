@@ -1,19 +1,23 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Expose } from 'class-transformer';
 
 @Entity()
 export class TrackEntity {
-  @PrimaryColumn()
+  @Expose()
+  @PrimaryGeneratedColumn('uuid')
   id: string; // uuid v4
+  @Expose()
   @Column()
   name: string;
+  @Expose()
   @Column({ nullable: true })
   artistId: string; // refers to Artist
+  @Expose()
   @Column({ nullable: true })
   albumId?: string; // refers to Album
+  @Expose()
   @Column()
   duration: number; // integer number
-  @Exclude()
   @Column('boolean', { default: false })
   isFavourite = false;
 }

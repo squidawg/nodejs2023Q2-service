@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { Track } from './model/track.model';
 import { v4, validate } from 'uuid';
 import { HTTP_CODE } from '../utils/util.model';
@@ -13,11 +18,11 @@ export class TrackService {
   ) {}
   async findOne(id: string) {
     if (!validate(id)) {
-      return HTTP_CODE.BAD_REQUEST;
+      throw new BadRequestException(`Id is invalid (not uuid)`);
     }
     const track = await this.repo.findOne({ where: { id } });
     if (!track) {
-      return HTTP_CODE.NOT_FOUND;
+      throw new NotFoundException(`Entity doesn't exist`);
     }
     return track;
   }
@@ -36,11 +41,11 @@ export class TrackService {
   }
   async update(id: string, content: Track) {
     if (!validate(id)) {
-      return HTTP_CODE.BAD_REQUEST;
+      throw new BadRequestException(`Id is invalid (not uuid)`);
     }
     const track = await this.repo.findOne({ where: { id } });
     if (!track) {
-      return HTTP_CODE.NOT_FOUND;
+      throw new NotFoundException(`Entity doesn't exist`);
     }
     const UpdatedTrack = { id, ...content };
     await this.repo.save(UpdatedTrack);
@@ -48,23 +53,25 @@ export class TrackService {
   }
   async delete(id: string) {
     if (!validate(id)) {
-      return HTTP_CODE.BAD_REQUEST;
+      throw new BadRequestException(`Id is invalid (not uuid)`);
     }
     const track = await this.repo.findOne({ where: { id } });
     if (!track) {
-      return HTTP_CODE.NOT_FOUND;
+      throw new NotFoundException(`Entity doesn't exist`);
     }
     Object.assign(track);
     await this.repo.remove(track);
     return HTTP_CODE.DELETED;
   }
-  findFavs() {
-    return this.repo.find({ where: { isFavourite: true } });
+  async findFavs() {
+    const tracks = await this.repo.find({ where: { isFavourite: true } });
+    tracks.slice().forEach((obj) => delete obj['isFavourite']);
+    return tracks;
   }
   async addFavTrack(id: string) {
     const track = await this.repo.findOne({ where: { id } });
     if (!track) {
-      return HTTP_CODE.UNPROC_CONTENT;
+      throw new UnprocessableEntityException('UnprocessableEntityException');
     }
     delete track.isFavourite;
     const UpdatedTrack: TrackEntity = { isFavourite: true, ...track };
@@ -73,9 +80,6 @@ export class TrackService {
   }
   async deleteFavTrack(id: string) {
     const track = await this.repo.findOne({ where: { id } });
-    if (!track) {
-      return;
-    }
     delete track.isFavourite;
     const UpdatedTrack = { isFavourite: false, ...track };
     await this.repo.save(UpdatedTrack);
