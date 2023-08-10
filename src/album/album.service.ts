@@ -1,4 +1,11 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateAlbumDto } from './dto/CreateAlbumDto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AlbumEntity } from './entities/album.entity';
@@ -17,16 +24,18 @@ export class AlbumService {
   findAll() {
     return this.repo.find();
   }
-  findFavs() {
-    return this.repo.find({ where: { isFavourite: true } });
+  async findFavs() {
+    const album = await this.repo.find({ where: { isFavourite: true } });
+    album.slice().forEach((obj) => delete obj['isFavourite']);
+    return album;
   }
   async findOne(id: string) {
     if (!validate(id)) {
-      return HTTP_CODE.BAD_REQUEST;
+      throw new BadRequestException(`Id is invalid (not uuid)`);
     }
     const album = await this.repo.findOne({ where: { id } });
     if (!album) {
-      return HTTP_CODE.NOT_FOUND;
+      throw new NotFoundException(`Entity doesn't exist`);
     }
     return album;
   }
@@ -42,11 +51,11 @@ export class AlbumService {
   }
   async update(id: string, content: CreateAlbumDto) {
     if (!validate(id)) {
-      return HTTP_CODE.BAD_REQUEST;
+      throw new BadRequestException(`Id is invalid (not uuid)`);
     }
     const album = await this.repo.findOne({ where: { id } });
     if (!album) {
-      return HTTP_CODE.NOT_FOUND;
+      throw new NotFoundException(`Entity doesn't exist`);
     }
     const UpdatedAlbum = { id, ...content };
     await this.repo.save(UpdatedAlbum);
@@ -54,11 +63,11 @@ export class AlbumService {
   }
   async delete(id: string) {
     if (!validate(id)) {
-      return HTTP_CODE.BAD_REQUEST;
+      throw new BadRequestException(`Id is invalid (not uuid)`);
     }
     const album = await this.repo.findOne({ where: { id } });
     if (!album) {
-      return HTTP_CODE.NOT_FOUND;
+      throw new NotFoundException(`Entity doesn't exist`);
     }
     Object.assign(album);
     const tracks = await this.trackService.findAll();
@@ -75,7 +84,7 @@ export class AlbumService {
   async addFavAlbum(id: string) {
     const album = await this.repo.findOne({ where: { id } });
     if (!album) {
-      return HTTP_CODE.UNPROC_CONTENT;
+      throw new UnprocessableEntityException('UnprocessableEntityException');
     }
     delete album.isFavourite;
     const UpdatedAlbum: AlbumEntity = { isFavourite: true, ...album };
@@ -85,7 +94,7 @@ export class AlbumService {
   async deleteFavAlbum(id: string) {
     const album = await this.repo.findOne({ where: { id } });
     if (!album) {
-      return;
+      throw new UnprocessableEntityException('UnprocessableEntityException');
     }
     delete album.isFavourite;
     const UpdatedAlbum: AlbumEntity = { isFavourite: false, ...album };
