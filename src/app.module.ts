@@ -8,10 +8,15 @@ import { AlbumModule } from './album/album.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 import typeorm from 'typeorm.config';
 @Module({
   imports: [
-    ConfigModule.forRoot({ load: [typeorm] }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: './.env',
+      load: [typeorm],
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -23,6 +28,7 @@ import typeorm from 'typeorm.config';
     ArtistModule,
     AlbumModule,
     FavoritesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
