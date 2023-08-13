@@ -17,6 +17,9 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersEntity) private repo: Repository<UsersEntity>,
   ) {}
+  async findByLogin(login: string) {
+    return await this.repo.findOne({ where: { login } });
+  }
   async findOne(id: string) {
     if (!validate(id)) {
       throw new BadRequestException(`Id is invalid (not uuid)`);
@@ -32,7 +35,7 @@ export class UsersService {
   }
   async create(content: CreateUserReq) {
     const timestampOfCreation = Date.now();
-    const test = {
+    const user = {
       id: v4(),
       login: content.login,
       password: content.password,
@@ -40,9 +43,9 @@ export class UsersService {
       updatedAt: timestampOfCreation,
       version: 1,
     };
-    const user = await this.repo.create(test);
-    await this.repo.save(user);
-    return test;
+    const userEntity = await this.repo.create(user);
+    await this.repo.save(userEntity);
+    return user;
   }
 
   async update(id: string, content: UpdatePasswordDto) {
