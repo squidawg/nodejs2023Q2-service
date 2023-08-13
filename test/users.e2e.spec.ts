@@ -56,7 +56,6 @@ describe('Users (e2e)', () => {
         .send(createUserDto);
 
       const { id } = creationResponse.body;
-
       expect(creationResponse.statusCode).toBe(StatusCodes.CREATED);
 
       const searchResponse = await unauthorizedRequest
@@ -98,7 +97,6 @@ describe('Users (e2e)', () => {
         .send(createUserDto);
 
       const { id, version, login, createdAt, updatedAt } = response.body;
-
       expect(response.status).toBe(StatusCodes.CREATED);
 
       expect(login).toBe(createUserDto.login);

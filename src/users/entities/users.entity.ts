@@ -7,7 +7,7 @@ export class UsersEntity {
   login: string;
   @Column()
   password: string;
-  @Column()
+  @Column({ default: 1 })
   version: number;
   @Column({ type: 'bigint' })
   createdAt: number;
