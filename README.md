@@ -78,6 +78,8 @@ To run only one of all test suites
 npm run test -- <path to suite>
 ```
 
+!!Note that auth tests should not work properly at this step of home-library-service implementation!!
+
 To run all test with authorization
 
 ```
