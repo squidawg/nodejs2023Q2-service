@@ -21,7 +21,7 @@ export class AuthService {
   }
 
   async login(user: UsersEntity) {
-    const payload = { userId: user.id, login: user.login };
+    const payload = { id: user.id, login: user.login };
     return {
       accessToken: await this.signAccessToken(payload),
       refreshToken: await this.signRefreshToken(payload),
@@ -29,26 +29,23 @@ export class AuthService {
   }
   async validate(content: AuthDto) {
     const user = await this.userService.findByLogin(content.login);
-    if (!user) {
-      throw new ForbiddenException('no user with such login');
-    }
     const isCompared = bcrypt.compareSync(content.password, user.password);
-    if (!isCompared) {
-      throw new ForbiddenException('no user with such password');
+
+    if (!user || !isCompared) {
+      throw new ForbiddenException(
+        "no user with such login or password doesn't match actual one",
+      );
     }
+
     return user ?? null;
   }
   checkToken(refreshDto: RefreshDto) {
     if (!refreshDto) {
-      throw new ForbiddenException();
+      throw new ForbiddenException('no refreshToken in body');
     }
-    const token = this.jwtService.verify(refreshDto.refreshToken, {
+    return this.jwtService.verify(refreshDto.refreshToken, {
       secret: process.env.JWT_SECRET_REFRESH_KEY,
     });
-    if (!token) {
-      throw new ForbiddenException();
-    }
-    return token;
   }
   private async signAccessToken(payload: JwtPayload) {
     return await this.jwtService.signAsync(payload, {
