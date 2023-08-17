@@ -28,24 +28,34 @@ export class AuthService {
     };
   }
   async validate(content: AuthDto) {
-    const user = await this.userService.findByLogin(content.login);
-    const isCompared = bcrypt.compareSync(content.password, user.password);
-
-    if (!user || !isCompared) {
+    try {
+      const user = await this.userService.findByLogin(content.login);
+      const isCompared = bcrypt.compareSync(content.password, user.password);
+      if (!isCompared) {
+        throw new ForbiddenException(
+          "no user with such login or password doesn't match actual one",
+        );
+      }
+      return user;
+    } catch (e) {
       throw new ForbiddenException(
         "no user with such login or password doesn't match actual one",
       );
     }
 
-    return user ?? null;
   }
-  checkToken(refreshDto: RefreshDto) {
-    if (!refreshDto) {
-      throw new ForbiddenException('no refreshToken in body');
+  async checkToken(refreshDto: RefreshDto) {
+    try {
+      const refreshToken = await this.jwtService.verifyAsync(
+        refreshDto.refreshToken,
+        {
+          secret: process.env.JWT_SECRET_REFRESH_KEY,
+        },
+      );
+      return refreshToken;
+    } catch (e) {
+      throw new ForbiddenException('Refresh token is invalid or expired');
     }
-    return this.jwtService.verify(refreshDto.refreshToken, {
-      secret: process.env.JWT_SECRET_REFRESH_KEY,
-    });
   }
   private async signAccessToken(payload: JwtPayload) {
     return await this.jwtService.signAsync(payload, {
@@ -53,6 +63,7 @@ export class AuthService {
       expiresIn: process.env.TOKEN_EXPIRE_TIME,
     });
   }
+
   private async signRefreshToken(payload: JwtPayload) {
     return await this.jwtService.signAsync(payload, {
       secret: process.env.JWT_SECRET_REFRESH_KEY,
