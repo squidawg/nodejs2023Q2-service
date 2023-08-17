@@ -2,12 +2,13 @@ import { applyDecorators, SetMetadata } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiProperty,
-  ApiResponse,
-} from '@nestjs/swagger';
+  ApiResponse, ApiUnauthorizedResponse
+} from "@nestjs/swagger";
 
 export function ApiGet(entity: any) {
   return applyDecorators(
@@ -32,10 +33,10 @@ export function ApiGetById(entity: any) {
 export class ErrorResponse {
   @ApiProperty({ example: '4xx' })
   statusCode: number;
+  @ApiProperty({ example: 'timestamp' })
+  timestamp: Date;
   @ApiProperty({ example: 'reason' })
   message: string;
-  @ApiProperty({ example: 'error_message' })
-  error: string;
 }
 
 export function ApiPost(entity?: any) {
@@ -44,6 +45,35 @@ export function ApiPost(entity?: any) {
     ApiCreatedResponse({ description: 'Record created', type: entity }),
     ApiBadRequestResponse({
       description: 'Request body does not contain required fields',
+      type: ErrorResponse,
+    }),
+  );
+}
+export function ApiLoginPost(entity?: any) {
+  return applyDecorators(
+    ApiOperation({ summary: 'Logging in User' }),
+    ApiOkResponse({ description: 'Login successful', type: entity }),
+    ApiBadRequestResponse({
+      description: 'Request body does not contain required fields',
+      type: ErrorResponse,
+    }),
+    ApiForbiddenResponse({
+      description:
+        "no user with such login or password doesn't match actual one",
+      type: ErrorResponse,
+    }),
+  );
+}
+export function ApiRefreshAuth(entity: any) {
+  return applyDecorators(
+    ApiOperation({ summary: 'Refresh JWT Token' }),
+    ApiOkResponse({ description: 'Refresh successful', type: entity }),
+    ApiUnauthorizedResponse({
+      description: 'Request body does not contain required fields',
+      type: ErrorResponse,
+    }),
+    ApiForbiddenResponse({
+      description: 'Refresh token is invalid or expired',
       type: ErrorResponse,
     }),
   );
@@ -83,6 +113,8 @@ export function ApiErrorResponses() {
     }),
   );
 }
+
+
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
