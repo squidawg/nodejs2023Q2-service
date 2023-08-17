@@ -1,47 +1,30 @@
-import * as fs from 'fs/promises';
 import { appendFile, mkdir, readdir } from 'fs/promises';
-const MAX_FILE_SIZE_KB = +process.env.MAX_FILE_SIZE_KB;
-let currentLogSize = 0;
+import * as fs from 'fs/promises';
+import { Injectable } from '@nestjs/common';
+import * as os from 'os';
 
+@Injectable()
 export class LogFileHandlerLogBase {
-  protected logFilePath: string;
-
-  async log(fileName: string, message: string) {
-    this.logFilePath = process.cwd() + `/dist/src/logs/${fileName}.log`;
+  logFilePath: string = '';
+  private MAX_FILE_SIZE_KB = +process.env.MAX_FILE_SIZE_KB;
+  async writeFile(fileName: string, message: string) {
+    if (this.logFilePath === '') {
+      this.logFilePath =
+        process.cwd() +
+        `/${process.env.PATH_LOGS}/${fileName}/${new Date().toISOString()}`;
+    }
     try {
       await readdir(this.logFilePath);
     } catch (e) {
       await mkdir(this.logFilePath, { recursive: true });
     }
+    const line = message + os.EOL;
     const source = `${this.logFilePath}/${fileName}.log`;
 
-    const line = message + '\r\n';
     await appendFile(source, line);
-    currentLogSize += message.length;
-
-    if (currentLogSize > MAX_FILE_SIZE_KB * 1024) {
-      await this.rotateLogFile();
+    const stat = await fs.stat(`${source}`);
+    if (stat.size > this.MAX_FILE_SIZE_KB * 10) {
+      this.logFilePath = '';
     }
-  }
-
-  protected async rotateLogFile() {
-    const backupFilePath = `/Users/zhenyaprivet/Desktop/nodejs2023Q2-service/src/logs/${this.logFilePath.replace(
-      '.log',
-      '',
-    )}_${new Date().toISOString()}.log`;
-    await fs.rename(this.logFilePath, backupFilePath);
-    currentLogSize = 0;
-  }
-}
-
-export class LogFileHandlerWarn extends LogFileHandlerLogBase {
-  async warn(message: string) {
-    await super.log('warn', message);
-  }
-}
-
-export class LogFileHandlerError extends LogFileHandlerLogBase {
-  async error(message: string) {
-    await super.log('error', message);
   }
 }
