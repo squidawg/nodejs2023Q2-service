@@ -11,7 +11,7 @@ export class LoggerService extends ConsoleLogger {
       return;
     }
     const formattedMessage = this.getFormattedMessage(message, context);
-    super.log(formattedMessage, context);
+    super.log(formattedMessage);
     await this.logFileHandlerLog.writeFile('log', formattedMessage);
   }
   async warn(message: any, context?: string) {
@@ -19,17 +19,17 @@ export class LoggerService extends ConsoleLogger {
       return;
     }
     const formattedMessage = this.getFormattedMessage(message, context);
-    super.warn(formattedMessage, context);
+    super.warn(formattedMessage);
     await this.logFileHandlerLog.writeFile('warn', formattedMessage);
   }
 
-  async error(message: any, trace: string = '', context?: string) {
+  async error(message: any, context?: string) {
     if (!this.isEnabled('error')) {
       return;
     }
     const formattedMessage = this.getFormattedMessage(message, context);
     await this.logFileHandlerLog.writeFile('error', formattedMessage);
-    super.error(formattedMessage, trace, context);
+    super.error(formattedMessage);
   }
 
   private getFormattedMessage(message: any, context?: string): string {
