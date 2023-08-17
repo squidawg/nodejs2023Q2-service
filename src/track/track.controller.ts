@@ -6,12 +6,12 @@ import {
   Param,
   Post,
   Put,
-  Res,
-} from '@nestjs/common';
+  Res, UsePipes, ValidationPipe
+} from "@nestjs/common";
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/CreateTrackDto';
 import { Serialize } from '../interceptors/serialize';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
 import { TrackEntity } from './entities/track.entity';
 import {
   ApiDelete,
@@ -22,6 +22,8 @@ import {
 } from '../utils/decorator.service';
 @ApiTags('Track Api')
 @Serialize(TrackEntity)
+@UsePipes(new ValidationPipe({ whitelist: true }))
+@ApiBearerAuth('access-token')
 @Controller('track')
 export class TrackController {
   constructor(private trackService: TrackService) {}

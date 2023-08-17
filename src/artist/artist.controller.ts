@@ -6,11 +6,11 @@ import {
   Param,
   Post,
   Put,
-  Res,
-} from '@nestjs/common';
+  Res, UsePipes, ValidationPipe
+} from "@nestjs/common";
 import { CreateArtistDto } from './dto/CreateArtistDto';
 import { ArtistService } from './artist.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Serialize } from '../interceptors/serialize';
 import {
   ApiDelete,
@@ -22,6 +22,8 @@ import {
 import { ArtistEntity } from './entities/artist.entity';
 @ApiTags('Artist Api')
 @Serialize(ArtistEntity)
+@UsePipes(new ValidationPipe({ whitelist: true }))
+@ApiBearerAuth('access-token')
 @Controller('artist')
 export class ArtistController {
   constructor(private artistService: ArtistService) {}

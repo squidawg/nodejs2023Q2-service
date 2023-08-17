@@ -6,9 +6,9 @@ import {
   Param,
   Post,
   Put,
-  Res,
-} from '@nestjs/common';
-import { ApiForbiddenResponse, ApiTags } from '@nestjs/swagger';
+  Res, UsePipes, ValidationPipe
+} from "@nestjs/common";
+import { ApiBearerAuth, ApiForbiddenResponse, ApiTags } from "@nestjs/swagger";
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePasswordDto';
@@ -24,6 +24,8 @@ import {
 } from '../utils/decorator.service';
 @ApiTags('User Api')
 @Serialize(UserData)
+@UsePipes(new ValidationPipe({ whitelist: true }))
+@ApiBearerAuth('access-token')
 @Controller('user')
 export class UsersController {
   constructor(private usersService: UsersService) {}

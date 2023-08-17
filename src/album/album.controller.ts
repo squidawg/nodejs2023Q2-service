@@ -6,11 +6,11 @@ import {
   Param,
   Post,
   Put,
-  Res,
-} from '@nestjs/common';
+  Res, UsePipes, ValidationPipe
+} from "@nestjs/common";
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/CreateAlbumDto';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
 import { Serialize } from '../interceptors/serialize';
 import { AlbumEntity } from './entities/album.entity';
 import {
@@ -22,6 +22,8 @@ import {
 } from '../utils/decorator.service';
 @ApiTags('Album Api')
 @Serialize(AlbumEntity)
+@UsePipes(new ValidationPipe({ whitelist: true }))
+@ApiBearerAuth('access-token')
 @Controller('album')
 export class AlbumController {
   constructor(private albumService: AlbumService) {}
