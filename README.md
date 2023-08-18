@@ -23,34 +23,38 @@ npm install
 ```
 
 ```
-Create .env file (based on development.env): in root folder
+Create .env file (based on development.env): in root folder example: ./.env
 ```
 
-## Running application
+## Running application in docker container
 
-### Run the next command in the terminal from root dir of a project 
+### Run the next command in the terminal from root dir of a project
 ### and wait till the app will be fully installed with Postgress db:
 ```
 docker-compose up --build
 ```
-### Note that: 
+
+## Running application locally with only db placed in docker container:
+
+1. in .env config file change ```DATABASE_HOST=db``` to```DATABASE_HOST=localhost```
+2. execute ```npm run docker:dev```
+
+## Note that: 
 Docker desktop app must be installed and started before the command execution.
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc
 
+## Troubleshooting
+
 if for some reason you catch a message that migrations can't be generated due to lack of changes, 
-then you might need to drop your db manually or delete volumes.
-to remove containers with images use:
+then you might need to drop your db manually or delete volumes.\
+to stop and remove containers with images use:
 ```
 docker-compose down --rmi all
 ```
-and repeat previous step
 
-## To run app locally with only db placed in docker container 
-1. in .env config file change to```DATABASE_HOST=localhost```
-2. ```npm run docker:dev```
-## Scan image for vulnerabilities 
+## Scan image for vulnerabilities
 
 ```
 npm run docker:scan:app
