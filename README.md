@@ -15,7 +15,7 @@ cd nodejs2023Q2-service
 ```
 
 ```
-git checkout logging-error-auth
+git checkout logging-error-authentication-auth
 ```
 
 ```
