@@ -5,39 +5,39 @@
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
 
-## Downloading
+## To download and setup the app, please run the following:
+```
+git clone git@github.com:squidawg/nodejs2023Q2-service.git
+```
 
 ```
-git clone {repository URL}
+cd nodejs2023Q2-service
 ```
 
-## Installing NPM modules
+```
+git checkout logging-error-auth
+```
 
 ```
 npm install
 ```
 
+```
+Create .env file (based on development.env): in root folder
+```
+
 ## Running application
 
-### !!! Rename file development.env to .env !!!
-
 ### Run the next command in the terminal from root dir of a project 
-### and wait till the app will be fully installed with Postgress:
+### and wait till the app will be fully installed with Postgress db:
 ```
 docker-compose up --build
 ```
 ### Note that: 
 Docker desktop app must be installed and started before the command execution.
-You also should initialize your database connection for more info see development.env file
-```
-DATABASE_HOST=db
-DATABASE_NAME=postgres
-DATABASE_USER=postgres
-DATABASE_PASSWORD=mysecretpassword
-DATABASE_PORT=5432
-```
+
 After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
+in your browser OpenAPI documentation by typing http://localhost:4000/doc
 
 if for some reason you catch a message that migrations can't be generated due to lack of changes, 
 then you might need to drop your db manually or delete volumes.
@@ -47,6 +47,9 @@ docker-compose down --rmi all
 ```
 and repeat previous step
 
+## To run app locally with only db placed in docker container 
+1. in .env config file change to```DATABASE_HOST=localhost```
+2. ```npm run docker:dev```
 ## Scan image for vulnerabilities 
 
 ```
@@ -61,23 +64,6 @@ To run test in the container from terminal open new window and use:
 docker-compose exec home-library-service sh
 ```
 
-from docker desktop app open new terminal window in the container section under Action column and use as default:
-```
-npm run test
-```
-
-To run all tests without authorization
-
-```
-npm run test
-```
-
-To run only one of all test suites
-
-```
-npm run test -- <path to suite>
-```
-
 To run all test with authorization
 
 ```
@@ -89,6 +75,14 @@ To run only specific test suite with authorization
 ```
 npm run test:auth -- <path to suite>
 ```
+!! Note that at this stage npm run test command  will fail due to implemented authentication
+
+## Logging
+
+To check if logs are saved in files:\
+if you are  running app locally: check `dist/src/logs` directory\
+if you running app from the docker container : check  `nodejs2023q2-service_logs` volume in volumes section,\
+then simply look for `dist/src/logs` in files to be sure that they appear in the directory.
 
 ### Auto-fix and format
 
