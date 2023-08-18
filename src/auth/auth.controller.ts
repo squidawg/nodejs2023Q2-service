@@ -17,7 +17,7 @@ import {
 } from '../utils/decorator.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserData } from '../users/model/users.model';
-import { AccessDto } from "./dto/access.dto";
+import { AccessDto } from './dto/access.dto';
 @ApiTags('Auth Api')
 @Controller('auth')
 export class AuthController {
