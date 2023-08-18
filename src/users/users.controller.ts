@@ -6,9 +6,11 @@ import {
   Param,
   Post,
   Put,
-  Res, UsePipes, ValidationPipe
-} from "@nestjs/common";
-import { ApiBearerAuth, ApiForbiddenResponse, ApiTags } from "@nestjs/swagger";
+  Res,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiForbiddenResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdatePasswordDto } from './dto/UpdatePasswordDto';

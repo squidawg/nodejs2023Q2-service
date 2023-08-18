@@ -1,14 +1,13 @@
 import { IsNotEmpty, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
-export class AuthDto {
+export class AccessDto {
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ example: 'MusicListener' })
-  login: string;
+  @ApiProperty({ example: 'string' })
+  accessToken: string;
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ example: 'mySecretPassword' })
-  password: string;
+  @ApiProperty({ example: 'string' })
+  refreshToken: string;
 }
-

@@ -1,10 +1,23 @@
-import { Body, Controller, HttpStatus, Post, UsePipes, ValidationPipe } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AccessDto, AuthDto } from "./dto/auth.dto";
+import { AuthDto } from './dto/auth.dto';
 import { RefreshDto } from './dto/refresh.dto';
-import { ApiLoginPost, ApiPost, ApiRefreshAuth, Public } from "../utils/decorator.service";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UserData } from "../users/model/users.model";
+import {
+  ApiLoginAuth,
+  ApiPost,
+  ApiRefreshAuth,
+  Public,
+} from '../utils/decorator.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UserData } from '../users/model/users.model';
+import { AccessDto } from "./dto/access.dto";
 @ApiTags('Auth Api')
 @Controller('auth')
 export class AuthController {
@@ -17,7 +30,7 @@ export class AuthController {
     return await this.authService.signUp(content);
   }
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  @ApiLoginPost(AccessDto)
+  @ApiLoginAuth(AccessDto)
   @Public()
   @Post('/login')
   async signin(@Body() content: AuthDto) {

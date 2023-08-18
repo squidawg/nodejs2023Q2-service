@@ -6,11 +6,13 @@ import {
   Param,
   Post,
   Put,
-  Res, UsePipes, ValidationPipe
-} from "@nestjs/common";
+  Res,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/CreateAlbumDto';
-import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { Serialize } from '../interceptors/serialize';
 import { AlbumEntity } from './entities/album.entity';
 import {

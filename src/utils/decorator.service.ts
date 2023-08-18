@@ -7,8 +7,9 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiProperty,
-  ApiResponse, ApiUnauthorizedResponse
-} from "@nestjs/swagger";
+  ApiResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 export function ApiGet(entity: any) {
   return applyDecorators(
@@ -19,6 +20,7 @@ export function ApiGet(entity: any) {
     }),
   );
 }
+
 export function ApiGetById(entity: any) {
   return applyDecorators(
     ApiOperation({ summary: 'Get record by Id' }),
@@ -28,15 +30,6 @@ export function ApiGetById(entity: any) {
     }),
     ApiErrorResponses(),
   );
-}
-
-export class ErrorResponse {
-  @ApiProperty({ example: '4xx' })
-  statusCode: number;
-  @ApiProperty({ example: 'timestamp' })
-  timestamp: Date;
-  @ApiProperty({ example: 'reason' })
-  message: string;
 }
 
 export function ApiPost(entity?: any) {
@@ -49,7 +42,8 @@ export function ApiPost(entity?: any) {
     }),
   );
 }
-export function ApiLoginPost(entity?: any) {
+
+export function ApiLoginAuth(entity?: any) {
   return applyDecorators(
     ApiOperation({ summary: 'Logging in User' }),
     ApiOkResponse({ description: 'Login successful', type: entity }),
@@ -64,6 +58,7 @@ export function ApiLoginPost(entity?: any) {
     }),
   );
 }
+
 export function ApiRefreshAuth(entity: any) {
   return applyDecorators(
     ApiOperation({ summary: 'Refresh JWT Token' }),
@@ -114,7 +109,14 @@ export function ApiErrorResponses() {
   );
 }
 
-
+export class ErrorResponse {
+  @ApiProperty({ example: '4xx' })
+  statusCode: number;
+  @ApiProperty({ example: 'timestamp' })
+  timestamp: Date;
+  @ApiProperty({ example: 'reason' })
+  message: string;
+}
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);

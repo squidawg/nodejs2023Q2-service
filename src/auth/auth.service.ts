@@ -6,6 +6,8 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'jsonwebtoken';
 import { RefreshDto } from './dto/refresh.dto';
 import { UsersEntity } from '../users/entities/users.entity';
+import { AccessDto } from './dto/access.dto';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -20,7 +22,7 @@ export class AuthService {
     });
   }
 
-  async login(user: UsersEntity) {
+  async login(user: UsersEntity): Promise<AccessDto> {
     const payload = { id: user.id, login: user.login };
     return {
       accessToken: await this.signAccessToken(payload),
@@ -30,7 +32,7 @@ export class AuthService {
   async validate(content: AuthDto) {
     try {
       const user = await this.userService.findByLogin(content.login);
-      const isCompared = bcrypt.compareSync(content.password, user.password);
+      const isCompared = await bcrypt.compare(content.password, user.password);
       if (!isCompared) {
         throw new ForbiddenException(
           "no user with such login or password doesn't match actual one",
@@ -42,7 +44,6 @@ export class AuthService {
         "no user with such login or password doesn't match actual one",
       );
     }
-
   }
   async checkToken(refreshDto: RefreshDto) {
     try {
