@@ -13,8 +13,7 @@ services:
     depends_on:
       - db
     volumes:
-        - .:${WORK_DIR}
-        - ${WORK_DIR}/node_modules
+        - logs:${WORK_DIR}/dist/src/logs
     networks:
       - hl-network
   db:
@@ -31,9 +30,12 @@ services:
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
       - PGDATA=${DATABASE_DATA}
     volumes:
-      - ${WORK_DIR}/node_modules
+      - db-vol:${WORK_DIR}/node_modules
     networks:
         - hl-network
 networks:
   hl-network:
     driver: bridge
+volumes:
+  logs:
+  db-vol:

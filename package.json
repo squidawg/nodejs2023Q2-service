@@ -18,6 +18,7 @@
     "test:auth": "cross-env TEST_MODE=auth jest --config ./test/jest-e2e.json  --noStackTrace --runInBand",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
+    "docker:dev": "docker-compose up -d db && npm run build && npm run start:migration:dev",
     "docker:scan:app": "docker login && docker scout cves jupitermass/home-library-service:home-library-service",
     "docker:scan:db": "docker login &&  docker scout cves jupitermass/home-library-service:nodejs2023q2-service-db",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
