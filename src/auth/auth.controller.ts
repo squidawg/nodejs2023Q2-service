@@ -15,7 +15,7 @@ import {
   ApiRefreshAuth,
   Public,
 } from '../utils/decorator.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { UserData } from '../users/model/users.model';
 import { AccessDto } from './dto/access.dto';
 @ApiTags('Auth Api')
@@ -43,7 +43,7 @@ export class AuthController {
     }),
   )
   @ApiRefreshAuth(AccessDto)
-  @ApiBearerAuth('access-token')
+  @Public()
   @Post('/refresh')
   async refresh(@Body() content: RefreshDto) {
     const token = await this.authService.checkToken(content);

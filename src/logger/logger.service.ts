@@ -32,6 +32,24 @@ export class LoggerService extends ConsoleLogger {
     super.error(formattedMessage);
   }
 
+  async debug(message: any, context?: string) {
+    if (!this.isEnabled('debug')) {
+      return;
+    }
+    const formattedMessage = this.getFormattedMessage(message, context);
+    await this.logFileHandlerLog.writeFile('debug', formattedMessage);
+    super.debug(formattedMessage);
+  }
+
+  async verbose(message: any, context?: string) {
+    if (!this.isEnabled('verbose')) {
+      return;
+    }
+    const formattedMessage = this.getFormattedMessage(message, context);
+    await this.logFileHandlerLog.writeFile('verbose', formattedMessage);
+    super.verbose(formattedMessage);
+  }
+
   private getFormattedMessage(message: any, context?: string): string {
     return `[${new Date().toISOString()}] [${context || 'App'}] ${message}`;
   }

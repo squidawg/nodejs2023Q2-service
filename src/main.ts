@@ -6,7 +6,7 @@ const PORT = +process.env.PORT || 4000;
 console.log(`Server started on http://localhost:${PORT}`);
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn', 'log'],
+    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
   });
   const logger = app.get(LoggerService);
   app.useLogger(logger);
