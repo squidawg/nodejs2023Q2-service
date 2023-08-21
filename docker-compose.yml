@@ -1,0 +1,41 @@
+version: '3.0'
+services:
+  home-library-service:
+    env_file:
+      - .env
+    image: home-library-service
+    build: .
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      - PORT=${PORT}
+    restart: always
+    depends_on:
+      - db
+    volumes:
+        - logs:${WORK_DIR}/dist/src/logs
+    networks:
+      - hl-network
+  db:
+    env_file:
+      - .env
+    build: ${PATH_TO_DB}
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    restart: always
+    environment:
+      - PATH_TO_DATABASE=${PATH_TO_DB}
+      - POSTGRES_PORT=${DATABASE_PORT}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - PGDATA=${DATABASE_DATA}
+    volumes:
+      - db-vol:${WORK_DIR}/node_modules
+    networks:
+        - hl-network
+networks:
+  hl-network:
+    driver: bridge
+volumes:
+  logs:
+  db-vol:
