@@ -19,17 +19,52 @@ npm install
 
 ## Running application
 
-```
-npm start
-```
+### !!! Rename file development.env to .env !!!
 
+### Run the next command in the terminal from root dir of a project 
+### and wait till the app will be fully installed with Postgress:
+```
+docker-compose up --build
+```
+### Note that: 
+Docker desktop app must be installed and started before the command execution.
+You also should initialize your database connection for more info see development.env file
+```
+DATABASE_HOST=db
+DATABASE_NAME=postgres
+DATABASE_USER=postgres
+DATABASE_PASSWORD=mysecretpassword
+DATABASE_PORT=5432
+```
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
+if for some reason you catch a message that migrations can't be generated due to lack of changes, 
+then you might need to drop your db manually or delete volumes.
+to remove containers with images use:
+```
+docker-compose down --rmi all
+```
+and repeat previous step
+
+## Scan image for vulnerabilities 
+
+```
+npm run docker:scan:app
+npm run docker:scan:db
+```
 ## Testing
 
-After application running open new terminal and enter:
+To run test in the container from terminal open new window and use:
+
+```
+docker-compose exec home-library-service sh
+```
+
+from docker desktop app open new terminal window in the container section under Action column and use as default:
+```
+npm run test
+```
 
 To run all tests without authorization
 
@@ -42,6 +77,8 @@ To run only one of all test suites
 ```
 npm run test -- <path to suite>
 ```
+
+!!Note that auth tests should not work properly at this step of home-library-service implementation!!
 
 To run all test with authorization
 
